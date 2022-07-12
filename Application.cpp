@@ -17,103 +17,84 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
-//static const GLfloat g_vertex_buffer_data[] = {
-//    -1.0f,-1.0f,-1.0f, // triangle 1 : begin
-//    -1.0f,-1.0f, 1.0f,
-//    -1.0f, 1.0f, 1.0f, // triangle 1 : end
-//    1.0f, 1.0f,-1.0f, // triangle 2 : begin
-//    -1.0f,-1.0f,-1.0f,
-//    -1.0f, 1.0f,-1.0f, // triangle 2 : end
-//    1.0f,-1.0f, 1.0f,
-//    -1.0f,-1.0f,-1.0f,
-//    1.0f,-1.0f,-1.0f,
-//    1.0f, 1.0f,-1.0f,
-//    1.0f,-1.0f,-1.0f,
-//    -1.0f,-1.0f,-1.0f,
-//    -1.0f,-1.0f,-1.0f,
-//    -1.0f, 1.0f, 1.0f,
-//    -1.0f, 1.0f,-1.0f,
-//    1.0f,-1.0f, 1.0f,
-//    -1.0f,-1.0f, 1.0f,
-//    -1.0f,-1.0f,-1.0f,
-//    -1.0f, 1.0f, 1.0f,
-//    -1.0f,-1.0f, 1.0f,
-//    1.0f,-1.0f, 1.0f,
-//    1.0f, 1.0f, 1.0f,
-//    1.0f,-1.0f,-1.0f,
-//    1.0f, 1.0f,-1.0f,
-//    1.0f,-1.0f,-1.0f,
-//    1.0f, 1.0f, 1.0f,
-//    1.0f,-1.0f, 1.0f,
-//    1.0f, 1.0f, 1.0f,
-//    1.0f, 1.0f,-1.0f,
-//    -1.0f, 1.0f,-1.0f,
-//    1.0f, 1.0f, 1.0f,
-//    -1.0f, 1.0f,-1.0f,
-//    -1.0f, 1.0f, 1.0f,
-//    1.0f, 1.0f, 1.0f,
-//    -1.0f, 1.0f, 1.0f,
-//    1.0f,-1.0f, 1.0f
+//// Vertices coordinates
+//GLfloat vertices[] =
+//{ //     COORDINATES     /        COLORS      /   TexCoord  //
+//    -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+//    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+//     0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+//     0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+//     0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+//};
+//
+//// Indices for vertices order
+//GLuint indices[] =
+//{
+//    0, 1, 2,
+//    0, 2, 3,
+//    0, 1, 4,
+//    1, 2, 4,
+//    2, 3, 4,
+//    3, 0, 4
 //};
 
-// Vertices coordinates
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-    -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-     0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-     0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-     0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // ------------------------------------------------------------------
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-
-/*
-// Vertices coordinates
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-    -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-     0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-     0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-     0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+// world space positions of our cubes
+glm::vec3 cubePositions[] = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(0.0f,  0.9f, 0.0f),
+    glm::vec3(0.0f,  0.8f, 0.0f)
 };
-*/
-
-// Indices for vertices order
-GLuint indices[] =
-{
-    0, 1, 2,
-    0, 2, 3,
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
-    3, 0, 4
-};
-
-
-/*
-// Indices for vertices order
-GLuint indices[] =
-{
-    0, 1, 2,
-    0, 2, 3,
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
-    3, 0, 4
-};*/
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
 
 
 
 int main()
 {
-
-    // glfw: initialize and configure
+    // glfw: initialize and configures
     // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -153,46 +134,91 @@ int main()
     // Generates Vertex Buffer Object and links it to vertices
     VBO VBO1(vertices, sizeof(vertices));
     // Generates Element Buffer Object and links it to indices
-    EBO EBO1(indices, sizeof(indices));
+    //EBO EBO1(indices, sizeof(indices));
 
     // Links VBO attributes such as coordinates and colors to VAO
-    VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    
+    // Position attrib
+    VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0);
+    // Color attrib
+    //VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Texture attrib
+    VAO1.LinkAttrib(VBO1, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+
+   /* VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
     VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));*/
 
     // Unbind all to prevent accidentally modifying them
     VAO1.Unbind();
     VBO1.Unbind();
-    EBO1.Unbind();
+    //EBO1.Unbind();
 
     // Texture
 
-    Texture brickTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    Texture brickTex("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
     brickTex.texUnit(shaderProgram, "tex0", 0);
 
     glEnable(GL_DEPTH_TEST);
 
     Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+
+    glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+    // pass transformation matrices to the shader
+    //shaderProgram.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+    //shaderProgram.setMat4("view", view);
     
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     // Main while loop
     while (!glfwWindowShouldClose(window))
     {
-        // Input
-        processInput(window);
-
+        
         //Rendering commands here...
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shaderProgram.Activate();
-
         //Handles camera inputs
         camera.Inputs(window);
-        // Updates and exports the camera matrix to the vertex shader
+
         camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[0]);
+        //float angle = 20.0f * i;
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::scale(model, glm::vec3(1.0, 1.0, 1.0));
+        shaderProgram.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+        model = glm::translate(model, cubePositions[1]);
+        //float angle = 20.0f * i;
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::scale(model, glm::vec3(0.75, 0.75, 0.75));
+        shaderProgram.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+       // camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+        //glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[2]);
+        //float angle = 20.0f * i;
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::scale(model, glm::vec3(0.6, 0.6, 0.6));
+        shaderProgram.setMat4("model", model);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+        // Updates and exports the camera matrix to the vertex shader
 
         brickTex.Bind();
         VAO1.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+
+
+        //glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
 
         // Check and call events and swap buffers.
@@ -201,7 +227,7 @@ int main()
 
     VAO1.Delete();
     VBO1.Delete();
-    EBO1.Delete();
+    //EBO1.Delete();
     brickTex.Delete();
     shaderProgram.Delete();
 
