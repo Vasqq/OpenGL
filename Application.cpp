@@ -86,9 +86,9 @@ GLfloat vertices[] = {
 
 // world space positions of our cubes
 glm::vec3 cubePositions[] = {
-    glm::vec3(0.0f,  0.0f,  0.0f),
-    glm::vec3(0.0f,  0.9f, 0.0f),
-    glm::vec3(0.0f,  0.8f, 0.0f)
+    glm::vec3(0.0f,  0.5f,  0.0f),
+    glm::vec3(0.0f,  0.75f, 0.0f),
+    glm::vec3(0.0f,  0.75f, 0.0f)
 };
 
 
@@ -144,7 +144,7 @@ int main()
     // Color attrib
     //VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     // Texture attrib
-    VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
    /* VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
     VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
