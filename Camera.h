@@ -26,11 +26,11 @@ public:
 	int width;
 	int height;
 
-	// Adjust the speed of the camera and it's sensitivity when looking around
+	// Adjust the speed of the camera and it's sensitivity w
 	float speed = 0.1f;
 	float sensitivity = 100.0f;
 
-	// Camera constructor to set up initial values
+	// set up initial values
 	Camera(int width, int height, glm::vec3 position);
 
 	// Updates and exports the camera matrix to the Vertex Shader

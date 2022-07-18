@@ -1,5 +1,6 @@
 #include"VBO.h"
 
+// Abstract the VBO functions for simpler code
 VBO::VBO(GLfloat* vertices, GLsizeiptr size)
 {
 

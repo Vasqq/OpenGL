@@ -16,9 +16,6 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{ba89fe99-847e-4d2b-9231-29cffbd5a96a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Textures">
-      <UniqueIdentifier>{6bbc99e0-a013-471c-9ab8-161833b44ae2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -79,16 +76,5 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\pop_cat.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="..\..\..\..\Downloads\brick.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="..\..\..\..\Downloads\container.jpg">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
   </ItemGroup>
 </Project>

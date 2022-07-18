@@ -1,6 +1,6 @@
 #include "VAO.h"
 
-
+// Abstract VAO functions for simpler code
 VAO::VAO()
 {
 
