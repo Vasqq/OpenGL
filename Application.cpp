@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "time.h"
 #include "Texture.h"
 #include "ShaderClass.h"
 #include "VAO.h"
@@ -49,11 +50,11 @@ void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
 
     // Draw skybox
 
-    glm::mat4 skyBoxMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)) 
-        * glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 100.0f));
-    shaderProgram.setMat4("model", skyBoxMatrix);
-    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 0.5f, 0.95f)));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    //glm::mat4 skyBoxMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)) 
+    //    * glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 100.0f));
+    //shaderProgram.setMat4("model", skyBoxMatrix);
+    //glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 0.5f, 0.95f)));
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Draw ground
 
@@ -75,15 +76,15 @@ void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
 
 }
 
-void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position)
+void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position, glm::vec3 scale, glm::mat4 rotation)
 {
 
     // Main cube
     //-------------------------------------------------------------------------------------------------
 
     glm::mat4 mainBodyMatrix = glm::mat4(1.0f);
-    mainBodyMatrix = glm::translate(mainBodyMatrix, position);
-    mainBodyMatrix = glm::scale(mainBodyMatrix, glm::vec3(3.0, 3.0, 3.0));
+    mainBodyMatrix = glm::translate(mainBodyMatrix, position) * rotation;
+    mainBodyMatrix = glm::scale(mainBodyMatrix, scale);
     shaderProgram.setMat4("model", mainBodyMatrix);
     glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
     glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -335,6 +336,18 @@ void drawLetterP(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm:
 
 }
 
+glm::vec3 getRandomPosition()
+{
+    GLfloat x,y,z;
+    y = 3.0f;
+    srand(time(0));
+
+    x = (rand() % (50 - (-50) + 1)) - 50;
+    z = (rand() % (50 - (-50) + 1)) - 50;
+
+        return glm::vec3(x, y, z);
+}
+
    
 
 
@@ -387,11 +400,13 @@ GLfloat vertices[] = {
 
 // world positions of the skateboards
 
-glm::vec3 skateboardPositions[] =
-{
-        glm::vec3(0.0f, 3.0f, -3.0f),
-};
+glm::vec3 position = glm::vec3(0.0f, 3.0f, -3.0f);
+glm::vec3 scale = glm::vec3(3.0, 3.0, 3.0);
+glm::mat4 rotation = glm::mat4(1.0f);
 
+glm::vec3 positionInitial = position;
+glm::vec3 scaleInitial = scale;
+glm::mat4 rotationInitial = rotation;
 
 int main()
 {
@@ -483,8 +498,74 @@ int main()
         drawWorld(shaderProgram, colorLoc, worldMatrixLoc);
 
         // Draw main body cube
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        {
+            position = getRandomPosition();
+
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+        {
+            scale *= glm::vec3(1.01f);
+
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+        {
+            scale *= glm::vec3(0.99f);
+
+        }
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+        {
+            rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        {
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            {
+                position += glm::vec3(-0.5f, 0.0f, 0.0f);
+
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.5f, 0.0f, 0.0f);
+
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.0f, 0.0f, 0.5f);
+
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.0f, 0.0f, -0.5f);
+
+            }
+
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
+        {
+            position = positionInitial;
+            rotation = rotationInitial;
+            scale = scaleInitial;
+
+        }
         
-        drawSnowman(shaderProgram, colorLoc, skateboardPositions[0]);
+
+    
+        drawSnowman(shaderProgram, colorLoc, position, scale, rotation);
+
 
         // Updates and exports the camera matrix to the vertex shader
         VAO1.Bind();
