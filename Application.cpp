@@ -25,8 +25,8 @@
 
 // Constants for screen and viewport size
 
-const unsigned int SCR_WIDTH = 1024;
-const unsigned int SCR_HEIGHT = 768;
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 800;
 
 void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
 {
@@ -47,14 +47,7 @@ void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
     glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
     glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 1.0f)));
     glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Draw skybox
-
-    //glm::mat4 skyBoxMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)) 
-    //    * glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 100.0f));
-    //shaderProgram.setMat4("model", skyBoxMatrix);
-    //glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 0.5f, 0.95f)));
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
+  
 
     // Draw ground
 
@@ -154,8 +147,6 @@ void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position, glm::
 
 
     // Hair
-    //----------------
-
 
     glm::mat4 hair = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.02f, 2.0f, 0.0f))
         * glm::scale(glm::mat4(1.0), glm::vec3(0.02f, 0.6f, 0.02f));
@@ -211,7 +202,6 @@ void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position, glm::
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Hands
-    // ----------------------------------------
 
     glm::mat4 hand = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(1.5f, 1.0f, 0.0f))
         * glm::scale(glm::mat4(1.0), glm::vec3(0.3f, 0.3f, 0.3f));
@@ -226,7 +216,6 @@ void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position, glm::
 
 
     // Fingers
-    // -----------------------------------------
 
     glm::mat4 fingers = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(1.8f, 1.0f, 0.0f))
         * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.03f, 0.03f));
@@ -262,76 +251,6 @@ void drawSnowman(Shader shaderProgram,GLuint colorLoc, glm::vec3 position, glm::
         * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.03f, 0.03f));
     shaderProgram.setMat4("model", fingers);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-}
-
-
-void drawLetterP(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
-{
-
-    // LETTER P
-
-    // Place letter on skateboard
-    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
-
-    glm::mat4 rotMatrix = glm::mat4(1.0f);
-
-
-    // Select letter P by pressing 1
-
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-    {
-        // Rotate letter counter-clockwise
-
-        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        {
-
-            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
-
-        }
-
-          // Rotate letter clockwise
-
-        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
-        {
-
-            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
-
-        }
-    }
-    
-
-    // Create 1st part of letter
-    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
-        * rotMatrix
-        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
-    shaderProgram.setMat4("model", mainBodyMatrix);
-    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Create 2nd part of later
-    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.5f, 0.0f))
-        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
-    shaderProgram.setMat4("model", line);
-    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Create 3rd part of later
-   line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.25f, 0.0f))
-        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.5, 1.0));
-    shaderProgram.setMat4("model", line);
-    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Create 4th part of letter
-    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.5f, 0.0f))
-        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
-    shaderProgram.setMat4("model", line);
-    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    
 
 
 }
@@ -398,7 +317,7 @@ GLfloat vertices[] = {
 };
 
 
-// world positions of the skateboards
+// Initial world position, scale and rotation of snowman
 
 glm::vec3 position = glm::vec3(0.0f, 3.0f, -3.0f);
 glm::vec3 scale = glm::vec3(3.0, 3.0, 3.0);
@@ -450,7 +369,7 @@ int main()
     VBO VBO1(vertices, sizeof(vertices));
 
     // Links VBO attributes such as coordinates and colors to VAO
-    
+    //---------------------------------------------------
     // Position attrib
     VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
     // Color attrib
@@ -495,14 +414,19 @@ int main()
         // Set projection and view matrix
         camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
+        // Set up the world to draw the snowman
+
         drawWorld(shaderProgram, colorLoc, worldMatrixLoc);
 
-        // Draw main body cube
+        // Reposition snowman randomly in the world
+
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         {
             position = getRandomPosition();
 
         }
+
+        // Scale up the snowman
 
         if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
         {
@@ -510,29 +434,45 @@ int main()
 
         }
 
+        // Scale down the snowman
+
         if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
         {
             scale *= glm::vec3(0.99f);
 
         }
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+
+        // Rotate snowman clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
         {
             rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(0.0, 1.0, 0.0));
 
         }
-        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+
+        // Rotate snowman counter-clockwise
+
+
+        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
         {
             rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(0.0, 1.0, 0.0));
 
         }
 
+
         if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
+       
+            // Move snowman left
+
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             {
                 position += glm::vec3(-0.5f, 0.0f, 0.0f);
 
             }
+
+            // Move snowman right
+
 
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             {
@@ -540,11 +480,17 @@ int main()
 
             }
 
+            // Move snowman forward
+
+
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             {
                 position += glm::vec3(0.0f, 0.0f, 0.5f);
 
             }
+
+            // Move snowman back
+
 
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             {
@@ -554,6 +500,8 @@ int main()
 
         }
 
+        // Reset snowman to initial position
+
         if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
         {
             position = positionInitial;
@@ -561,9 +509,34 @@ int main()
             scale = scaleInitial;
 
         }
-        
 
-    
+        // Set rendering mode to lines
+
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        }
+
+
+        // Set rendering mode to points
+
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
+        }
+
+        // Set rendering mode to triangles
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        }
+        
+        // Draw snowman based on position, scale and rotation
+        
         drawSnowman(shaderProgram, colorLoc, position, scale, rotation);
 
 
