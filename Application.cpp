@@ -25,9 +25,474 @@
 
 // Constants for screen and viewport size
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int SCR_WIDTH = 1024;
+const unsigned int SCR_HEIGHT = 768;
 
+void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
+{
+
+    // Draw axis
+
+    glm::mat4 axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(5.0f, 0.1f, 0.1f));
+    glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 5.0f, 0.1f));
+    glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 1.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.5f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 5.0f));
+    glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Draw skybox
+
+    glm::mat4 skyBoxMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 100.0f));
+    shaderProgram.setMat4("model", skyBoxMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 0.5f, 0.95f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Draw ground
+
+    for (float i = -50.0f; i <= 50.0f; i++)
+    {
+        glm::mat4 floorWorldMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, i)) * glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 0.02f, 0.02f));
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floorWorldMatrix[0][0]);
+        glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.53f, 0.81f, 0.92f)));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    for (float i = -50.0f; i <= 50.0f; i++)
+    {
+        glm::mat4 floorWorldMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02f, 0.02f, 100.0f));
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floorWorldMatrix[0][0]);
+        glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.53f, 0.81f, 0.92f)));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+}
+
+void drawSkateboard(Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    // Drawing skateboard
+    //-------------------------------------------------------------------------------------------------
+
+    glm::mat4 mainBodyMatrix = glm::mat4(1.0f);
+    mainBodyMatrix = glm::translate(mainBodyMatrix, position);
+    mainBodyMatrix = glm::scale(mainBodyMatrix, glm::vec3(8.0, 0.25, 2.0));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.81f, 0.63f, 0.4f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Drawing all the wheels
+    //-------------------------------------------------------------------------------------------------
+
+    // Draw wheel relative to mainBodyMatrix
+    glm::mat4 wheel = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.35f, -1.0f, 0.35f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.0625f, 2.0f, 0.25f));
+    shaderProgram.setMat4("model", wheel);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // 2nd wheel
+    wheel = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.35f, -1.0f, -0.35f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.0625f, 2.0f, 0.25f));
+    shaderProgram.setMat4("model", wheel);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // 3rd wheel
+    wheel = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(-0.35f, -1.0f, 0.35f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.0625f, 2.0f, 0.25f));
+    shaderProgram.setMat4("model", wheel);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // 4th wheel
+    wheel = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(-0.35f, -1.0f, -0.35f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.0625f, 2.0f, 0.25f));
+    shaderProgram.setMat4("model", wheel);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f, 0.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+}
+
+
+void drawLetterP(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    // LETTER P
+
+    // Place letter on skateboard
+    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
+
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+
+    // Select letter P by pressing 1
+
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    {
+        // Rotate letter counter-clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate letter clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+
+    // Create 1st part of letter
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of later
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.5f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 3rd part of later
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.25f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.5, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 4th part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.25f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+}
+
+void drawLetterE(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    // LETTER E
+
+    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+    // Select letter E by pressing 2
+
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    {
+
+        // Rotate letter counter-clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate letter clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+
+
+    // Create 1st part of letter
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 1.0f, 0.75f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of letter
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.5f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 1.0f, 0.75f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 3rd part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));;
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 1.0f, 0.75f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+    // Create 4th part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, -0.45f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));;
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.4f, 1.0f, 0.75f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+}
+
+void drawLetterR(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    // LETTER R
+
+    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+    // Select letter R by pressing 3
+
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    {
+        // Rotate letter counter clockwise
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate letter clockwise
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+    // Create 1st part of letter
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.8f, 0.2f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of letter
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.5f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.8f, 0.2f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 3rd part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.3f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.5, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.8f, 0.2f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 4th part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(4.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.8f, 0.2f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 5th part of letter
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, -0.27f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.45, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.8f, 0.2f, 1.0f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void drawLetterI(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    position = position + glm::vec3(0.0f, 1.5f, 0.0f);
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+    // LETTER I
+    // Select letter i by pressing 4
+
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+    {
+        // Rotate letter counter clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+// Constants for screen and viewport size
+
+        // Rotate letter clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+
+    // Create 1st part of letter
+
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 3.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 0.5f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of letter
+
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.2, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 0.5f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void drawLetterA(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+
+    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+    // LETTER A
+    // Select letter A by pressing 5
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+    {
+        // Rotate letter counter clockwise
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate letter clockwise
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+    // Create 1st part of letter
+
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of letter
+
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.5f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 3rd part of letter
+
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.25f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.5, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 4th part of letter
+
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 5th part of letter
+
+    line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, -0.25f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 0.5, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+}
+
+void drawLetterL(GLFWwindow* window, Shader shaderProgram, GLuint colorLoc, glm::vec3 position)
+{
+    // LETTER L
+
+    position = position + glm::vec3(0.0f, 2.0f, 0.0f);
+    glm::mat4 rotMatrix = glm::mat4(1.0f);
+
+    // Select letter L by pressing 6
+
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+    {
+        // Rotate letter counter clockwise
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate letter clockwise
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        {
+
+            rotMatrix = rotMatrix * glm::rotate(glm::mat4(1.0f), (float)(-glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+    }
+
+    // Create 1st part of letter
+    glm::mat4 mainBodyMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+        * rotMatrix
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 4.0, 0.1));
+    shaderProgram.setMat4("model", mainBodyMatrix);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.95f, 0.35f, 0.90f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Create 2nd part of letter
+    glm::mat4 line = mainBodyMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, -0.45f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(6.0, 0.1, 1.0));
+    shaderProgram.setMat4("model", line);
+    glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.95f, 0.35f, 0.90f)));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+}
+
+
+// set up vertex data and configure vertex attributes
+// ------------------------------------------------------------------
 void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc)
 {
 
@@ -360,16 +825,30 @@ GLfloat vertices[] = {
 
 };
 
-
+    glm::vec3(0.0f,  0.75f,  0.0f),
+glm::vec3 skateboardPositions[] =
+{
+        glm::vec3(0.0f, 1.0f, -3.0f),
+        glm::vec3(10.0f, 1.0f, -3.0f),
+        glm::vec3(-10.0f, 1.0f, -3.0f),
+        glm::vec3(0.0f, 1.0f, -10.0f),
+        glm::vec3(10.0f, 1.0f, -10.0f),
+        glm::vec3(-10.0f, 1.0f, -10.0f),
+};
 // Initial world position, scale and rotation of snowman
+    glm::vec3(0.0f,  0.75f, 0.0f),
+    glm::vec3(0.0f,  -1.0f,  0.0f),
+    glm::vec3(-2.0f,  -5.0f,  0.0f)
+
+};
+glm::vec3 positionInitial = position;
+glm::vec3 scaleInitial = scale;
+glm::mat4 rotationInitial = rotation;
 
 glm::vec3 position = glm::vec3(0.0f, 3.0f, -3.0f);
 glm::vec3 scale = glm::vec3(3.0, 3.0, 3.0);
 glm::mat4 rotation = glm::mat4(1.0f);
 
-glm::vec3 positionInitial = position;
-glm::vec3 scaleInitial = scale;
-glm::mat4 rotationInitial = rotation;
 
 int main()
 {
@@ -409,32 +888,37 @@ int main()
     VAO VAO1;
     VAO1.Bind();
 
-    // Generates Vertex Buffer Object and links it to vertices
-    VBO VBO1(vertices, sizeof(vertices));
-
-    // Links VBO attributes such as coordinates and colors to VAO
     //---------------------------------------------------
-    // Position attrib
+    // Generates Vertex Buffer Object and links it to vertices
+    VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+    // Color attrib
+    VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0);
     // Texture attrib
     VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    
+    // Position attrib
+    VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+    // Color attrib
+    //VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Texture attrib
+    VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 
     // Unbind all to prevent accidentally modifying them
     VAO1.Unbind();
     VBO1.Unbind();
-
+    // Initialize and define view and projection matrices
+    glm::mat4 view = glm::mat4(1.0f);
+    // Initialize and define view and projection matrices
+    glm::mat4 view = glm::mat4(1.0f); 
     // Set depth test for 3d objects in the world
     glEnable(GL_DEPTH_TEST);
 
     // Initialize the camera
-    Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
-
-    // Initialize and define view and projection matrices
-    glm::mat4 view = glm::mat4(1.0f); 
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+    // Get address for the unifroms from the shader
+    GLuint colorLoc = glGetUniformLocation(shaderProgram.ID, "color");
+    GLuint worldMatrixLoc = glGetUniformLocation(shaderProgram.ID, "model");
 
     // Get address for the unifroms from the shader
     GLuint colorLoc = glGetUniformLocation(shaderProgram.ID, "color");
@@ -443,14 +927,30 @@ int main()
     // Texture
     Texture popCat("snow.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
     popCat.texUnit(shaderProgram, "tex0", 0);
-
-
-    // Main while loop
+    glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     //Rendering commands here...
     // ------------------------------------------------------------------
 
+
+    //Rendering commands here...
+    // ------------------------------------------------------------------
+
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+
+    
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
+    // Main while loop
     while (!glfwWindowShouldClose(window))
     {
+        //Handles camera inputs to move around
+        //popCat.Bind();
+
+
+        //Handles camera inputs to move around
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -458,17 +958,11 @@ int main()
 
         shaderProgram.Activate();
 
-        //popCat.Bind();
-
-
-        //Handles camera inputs to move around
         camera.Inputs(window);
 
-        // Set projection and view matrix
-        camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
-
-
-
+        for (int i = 0; i < 6; i++)
+        {
+            drawSkateboard(shaderProgram, colorLoc, skateboardPositions[i]);
         // Set up the world to draw the snowman
 
         drawWorld(shaderProgram, colorLoc, worldMatrixLoc);
@@ -543,7 +1037,7 @@ int main()
                 position += glm::vec3(0.0f, 0.0f, 0.5f);
 
             }
-
+        for (float i = -50.0f; i <= 50.0f; i++)
             // Move snowman back
 
 
@@ -553,8 +1047,9 @@ int main()
 
             }
 
-        }
 
+        for (float i = -50.0f; i <= 50.0f; i++)
+        // Draw letters and place them on each skateboard
         // Reset snowman to initial position
 
         if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
@@ -566,6 +1061,13 @@ int main()
         }
 
         // Set rendering mode to lines
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        drawLetterP(window, shaderProgram, colorLoc, skateboardPositions[0]);
+        drawLetterE(window, shaderProgram, colorLoc, skateboardPositions[1]);
+        drawLetterR(window, shaderProgram, colorLoc, skateboardPositions[2]);
+        drawLetterI(window, shaderProgram, colorLoc, skateboardPositions[3]);
+        drawLetterA(window, shaderProgram, colorLoc, skateboardPositions[4]);
+        drawLetterL(window, shaderProgram, colorLoc, skateboardPositions[5]);
 
         if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
         {
@@ -602,8 +1104,20 @@ int main()
        // glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
+        model = glm::translate(glm::mat4(1.0f), cubePositions[4]);
+        model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 1.0));
+        shaderProgram.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+       
+
         // Updates and exports the camera matrix to the vertex shader
         VAO1.Bind();
+
+
+    // Clean up memory
+
+    // Clean up memory
 
         //glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
@@ -611,8 +1125,6 @@ int main()
         // Check and call events and swap buffers.
         glfwPollEvents();
     }
-
-    // Clean up memory
 
     VAO1.Delete();
     VBO1.Delete();
