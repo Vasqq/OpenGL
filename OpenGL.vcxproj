@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Dependencies\glad\src\glad.c" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ShaderClasscpp.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -158,17 +159,22 @@
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="light.frag" />
+    <None Include="light.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dependencies\stb\include\stb_image.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\planks.png" />
+    <Image Include="..\..\..\..\Downloads\planksSpec.png" />
     <Image Include="..\..\..\..\Downloads\pop_cat.png" />
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
   </ItemGroup>
