@@ -65,6 +65,12 @@
     <None Include="light.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
+    <None Include="color.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="color.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderClass.h">
@@ -103,6 +109,9 @@
       <Filter>Resources\Textures</Filter>
     </Image>
     <Image Include="..\..\..\..\Downloads\planks.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\container2.png">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>

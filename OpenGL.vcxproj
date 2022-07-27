@@ -157,6 +157,8 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="color.frag" />
+    <None Include="color.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="light.frag" />
@@ -173,6 +175,7 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\container2.png" />
     <Image Include="..\..\..\..\Downloads\planks.png" />
     <Image Include="..\..\..\..\Downloads\planksSpec.png" />
     <Image Include="..\..\..\..\Downloads\pop_cat.png" />
