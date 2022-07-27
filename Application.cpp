@@ -129,6 +129,17 @@ void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm:
     shaderProgram.setMat4("model", mouth);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
+    // Hat
+    glm::mat4 hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.3f, 0.f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.1f, 0.5f));
+    shaderProgram.setMat4("model", hat);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
+
+    hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.4f, 0.f))
+        * glm::scale(glm::mat4(1.0), glm::vec3(0.3f, 0.4f, 0.3f));
+    shaderProgram.setMat4("model", hat);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
+
 
 }
 
@@ -1444,6 +1455,50 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
+GLfloat cubeVertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
+
 
 int main()
 
@@ -1677,8 +1732,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	planksTex.Delete();
-	//planksSpec.Delete();
+	snowTex.Delete();
 	shaderProgram.Delete();
 	lightVAO.Delete();
 	lightVBO.Delete();
