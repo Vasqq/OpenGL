@@ -175,10 +175,13 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\blue.jpg" />
     <Image Include="..\..\..\..\Downloads\container2.png" />
+    <Image Include="..\..\..\..\Downloads\green.jpg" />
     <Image Include="..\..\..\..\Downloads\planks.png" />
     <Image Include="..\..\..\..\Downloads\planksSpec.png" />
     <Image Include="..\..\..\..\Downloads\pop_cat.png" />
+    <Image Include="..\..\..\..\Downloads\red.jpg" />
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
