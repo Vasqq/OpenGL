@@ -23,6 +23,8 @@ uniform vec3 lightPos;
 // Gets the position of the camera from the main function
 uniform vec3 camPos;
 
+uniform bool spotOff;
+
 
 vec4 pointLight()
 {	
@@ -31,12 +33,12 @@ vec4 pointLight()
 
 	// intensity of light with respect to distance
 	float dist = length(lightVec);
-	float a = 0.00000005;
-	float b = 0.01;
+	float a = 0.00005;
+	float b = 0.002;
 	float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
 
 	// ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.2f;
 
 	// diffuse lighting
 	vec3 normal = normalize(Normal);
@@ -56,11 +58,11 @@ vec4 pointLight()
 vec4 direcLight()
 {
 	// ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.1f;
 
 	// diffuse lighting
 	vec3 normal = normalize(Normal);
-	vec3 lightDirection = normalize(vec3(1.0f, 1.0f, 0.0f));
+	vec3 lightDirection = normalize(vec3(0.8f, 1.0f, 0.8f));
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 
 	// specular lighting
@@ -95,7 +97,7 @@ vec4 spotLight()
 	float specular = specAmount * specularLight;
 
 	// calculates the intensity of the crntPos based on its angle to the center of the light cone
-	float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
+	float angle = dot(vec3(0.0f, 0.0f, -1.0f), -lightDirection);
 	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
 	return (texture(tex0, texCoord) * (diffuse * inten + ambient) + texture(tex1, texCoord).r * specular * inten) * lightColor;
@@ -104,6 +106,12 @@ vec4 spotLight()
 
 void main()
 {
-	// outputs final color
-	FragColor = pointLight();
+	if (spotOff == true)
+	{
+	FragColor = spotLight();
+	}
+	else
+	{
+	FragColor = direcLight();
+	}
 }

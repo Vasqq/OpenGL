@@ -149,7 +149,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Dependencies\glad\src\glad.c" />
     <ClCompile Include="EBO.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ShaderClasscpp.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -168,21 +167,33 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dependencies\stb\include\stb_image.h" />
     <ClInclude Include="EBO.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\black_gloss.jpg" />
     <Image Include="..\..\..\..\Downloads\blue.jpg" />
     <Image Include="..\..\..\..\Downloads\container2.png" />
+    <Image Include="..\..\..\..\Downloads\diamond.png" />
+    <Image Include="..\..\..\..\Downloads\dirt.jpg" />
+    <Image Include="..\..\..\..\Downloads\ender.png" />
+    <Image Include="..\..\..\..\Downloads\glass.png" />
+    <Image Include="..\..\..\..\Downloads\gold.png" />
     <Image Include="..\..\..\..\Downloads\green.jpg" />
+    <Image Include="..\..\..\..\Downloads\iron.png" />
+    <Image Include="..\..\..\..\Downloads\lapis.png" />
+    <Image Include="..\..\..\..\Downloads\lava.png" />
+    <Image Include="..\..\..\..\Downloads\metal.jpg" />
+    <Image Include="..\..\..\..\Downloads\obsidian.png" />
     <Image Include="..\..\..\..\Downloads\planks.png" />
     <Image Include="..\..\..\..\Downloads\planksSpec.png" />
     <Image Include="..\..\..\..\Downloads\pop_cat.png" />
     <Image Include="..\..\..\..\Downloads\red.jpg" />
+    <Image Include="..\..\..\..\Downloads\Sky.jpg" />
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
+    <Image Include="..\..\..\..\Downloads\water.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

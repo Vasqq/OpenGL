@@ -48,9 +48,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -94,9 +91,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\pop_cat.png">
@@ -121,6 +115,45 @@
       <Filter>Resources\Textures</Filter>
     </Image>
     <Image Include="..\..\..\..\Downloads\blue.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\metal.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\Sky.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\black_gloss.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\dirt.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\lava.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\gold.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\glass.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\lapis.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\water.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\ender.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\diamond.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\iron.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\obsidian.png">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>
