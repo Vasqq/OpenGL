@@ -123,5 +123,14 @@
     <Image Include="..\..\..\..\Downloads\blue.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
+    <Image Include="carrot.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="shiny.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="sky.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

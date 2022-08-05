@@ -98,15 +98,7 @@ void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm:
     shaderProgram.setMat4("model", legs);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
-    // Nose
-
-    sphereColor = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
-
-    glm::mat4 nose = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 2.8f, 0.35f))
-        * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
-    glUniform4f(glGetUniformLocation(shaderProgram.ID, "color"), sphereColor.x, sphereColor.y, sphereColor.z, sphereColor.w);
-    shaderProgram.setMat4("model", nose);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
+    
 
     // Eyes
 
@@ -133,16 +125,7 @@ void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm:
     shaderProgram.setMat4("model", mouth);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
-    // Hat
-    glm::mat4 hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.3f, 0.f))
-        * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 0.1f, 0.5f));
-    shaderProgram.setMat4("model", hat);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
-    hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.4f, 0.f))
-        * glm::scale(glm::mat4(1.0), glm::vec3(0.3f, 0.4f, 0.3f));
-    shaderProgram.setMat4("model", hat);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
 
 }
@@ -1419,9 +1402,9 @@ Vertex vertexBuffer[] = {
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS        /    TexCoord    /       NORMALS     //
 	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 100.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		100.0f, 100.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		100.0f, 0.0f,		0.0f, 1.0f, 0.0f
 };
 
 // Indices for vertices order
@@ -1554,6 +1537,27 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
     Shader colorShader("color.vert", "color.frag");
 
+
+    VAO VAOfloor;
+    VAOfloor.Bind();
+
+    VBO VBOfloor(vertices, sizeof(vertices));
+    EBO EBOfloor(indices, sizeof(indices));
+
+    // Co ords
+    VAOfloor.LinkAttrib(VBOfloor, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
+    // Colors
+    VAOfloor.LinkAttrib(VBOfloor, 2, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Textures
+    VAOfloor.LinkAttrib(VBOfloor, 3, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+    // Normals
+    VAOfloor.LinkAttrib(VBOfloor, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+
+    // Unbind all to prevent accidentally modifying them
+    VAOfloor.Unbind();
+    VBOfloor.Unbind();
+    EBOfloor.Unbind();
+
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
@@ -1663,7 +1667,10 @@ int main()
     Texture tex1("red.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex2("blue.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex3("green.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    Texture tex4("pop_cat.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    Texture tex4("sky.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    Texture tex5("carrot.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    Texture tex6("shiny.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+
 
 
 
@@ -1671,6 +1678,7 @@ int main()
 
     GLuint colorLoc = glGetUniformLocation(shaderProgram.ID, "lightColor");
     GLuint worldMatrixLoc = glGetUniformLocation(shaderProgram.ID, "model");
+    int textureOn = true;
 
 
 	// Enables the Depth Buffer
@@ -1700,53 +1708,94 @@ int main()
 		// Export the camMatrix to the Vertex Shader of the pyramid
 		camera.Matrix(colorShader, "camMatrix");
 
+        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        {
+            if (textureOn == true)
+            {
+                textureOn = false;
+            }
+
+            else if (textureOn == false)
+            {
+                textureOn = true;
+            }
+        }
+
         VAO1.Bind();
 
+    
 
-        // Original code from the tutorial
-        tex0.texUnit(shaderProgram, "tex0", 0);
-		//// Binds textures so that they appear in the rendering
-		tex0.Bind();
-		//planksSpec.Bind();
-		//////// Bind the VAO so OpenGL knows to use it
+        if (textureOn == true)
+        {
+            // Original code from the tutorial
+            tex0.texUnit(shaderProgram, "tex0", 0);
+            // Binds textures so that they appear in the rendering
+            tex0.Bind();
+        }
+
+		//Bind the VAO so OpenGL knows to use it
+
+        VAOfloor.Bind();
+
 
         // Draw floor
         glm::mat4 floor = glm::mat4(1.0f);
-        glm::vec3 floorPos = glm::vec3(0.0f, 0.0f, 0.0f);
+        glm::vec3 floorPos = glm::vec3(0.0f, -0.1f, 0.0f);
         floor = glm::translate(floor, floorPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 0.01f, 100.0f));;
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-        tex4.texUnit(shaderProgram, "tex0", 0);
-        tex4.Bind();
 
+        if (textureOn == true)
+        {
+
+            tex4.texUnit(shaderProgram, "tex0", 0);
+            tex4.Bind();
+        }
+      
+
+        VAO1.Bind();
 
          // Draw skybox
         glm::mat4 skybox = glm::mat4(1.0f);
         glm::vec3 skyboxPos = glm::vec3(0.0f, 0.0f, 0.0f);
-        floor = glm::translate(skybox, skyboxPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 100.0f, 100.0f));;
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
+        skybox = glm::translate(skybox, skyboxPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 100.0f, 100.0f));;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &skybox[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         // Draw axis
 
-        tex1.texUnit(shaderProgram, "tex0", 0);
-        tex1.Bind();
+        if (textureOn == true)
+        {
+
+            tex1.texUnit(shaderProgram, "tex0", 0);
+            tex1.Bind();
+        }
+
+       
 
        glm::mat4 axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(5.0f, 0.1f, 0.1f));
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        tex2.texUnit(shaderProgram, "tex0", 0);
-        tex2.Bind();
+        if (textureOn == true)
+        {
+
+            tex2.texUnit(shaderProgram, "tex0", 0);
+            tex2.Bind();
+        }
 
         axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 5.0f, 0.1f));
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        tex3.texUnit(shaderProgram, "tex0", 0);
-        tex3.Bind();
+        if (textureOn == true)
+        {
+
+            tex3.texUnit(shaderProgram, "tex0", 0);
+            tex3.Bind();
+        }
 
         axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.5f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 5.0f));
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
@@ -1770,6 +1819,41 @@ int main()
        glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
        drawSnowman(colorShader, position, scale, rotation, numOfVertices);
+
+       shaderProgram.Activate();
+
+       // Nose
+       VAO1.Bind();
+       if (textureOn == true)
+       {
+
+           tex5.texUnit(shaderProgram, "tex0", 0);
+           tex5.Bind();
+       }
+
+       mat4 mainBodyMatrix = mat4(1.0f);
+       glm::mat4 nose = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 8.75f, 1.5f))
+           * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
+       shaderProgram.setMat4("model", nose);
+       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+       if (textureOn == true)
+       {
+
+           tex6.texUnit(shaderProgram, "tex0", 0);
+           tex6.Bind();
+       }
+
+       //// Hat
+       glm::mat4 hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 9.7f, 0.f))
+           * glm::scale(glm::mat4(1.0), glm::vec3(2.5f, 0.1f, 2.5f));
+       shaderProgram.setMat4("model", hat);
+       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+       hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 10.5f, 0.f))
+           * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 1.8f, 1.5f));
+       shaderProgram.setMat4("model", hat);
+       glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 		//// Tells OpenGL which Shader Program we want to use
