@@ -53,7 +53,7 @@ void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc, Tex
 }
 
 
-void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm::mat4 rotation, GLuint numOfVertices)
+mat4 drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm::mat4 rotation, GLuint numOfVertices)
 {
 
     glm::vec4 sphereColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -126,8 +126,21 @@ void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm:
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
 
+    return mainBodyMatrix;
 
 
+}
+
+glm::vec3 getRandomPosition()
+{
+    GLfloat x, y, z;
+    y = 3.0f;
+    srand(time(0));
+
+    x = (rand() % (50 - (-50) + 1)) - 50;
+    z = (rand() % (50 - (-50) + 1)) - 50;
+
+    return glm::vec3(x, y, z);
 }
 
 
@@ -1684,8 +1697,9 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+    vec3 initialCamPos = vec3(0.0f, 5.0f, 20.0f);
 	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera camera(width, height, initialCamPos);
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -1802,6 +1816,121 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        {
+            position = getRandomPosition();
+
+        }
+
+        // Scale up the snowman
+
+        if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+        {
+            scale *= glm::vec3(1.01f);
+
+        }
+
+        // Scale down the snowman
+
+        if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+        {
+            scale *= glm::vec3(0.99f);
+
+        }
+
+        // Rotate snowman clockwise
+
+        if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        {
+            rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+        // Rotate snowman counter-clockwise
+
+
+        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        {
+            rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        }
+
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        {
+
+            // Move snowman left
+
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            {
+                position += glm::vec3(-0.5f, 0.0f, 0.0f);
+
+            }
+
+            // Move snowman right
+
+
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.5f, 0.0f, 0.0f);
+
+            }
+
+            // Move snowman forward
+
+
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.0f, 0.0f, 0.5f);
+
+            }
+
+            // Move snowman back
+
+
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            {
+                position += glm::vec3(0.0f, 0.0f, -0.5f);
+
+            }
+
+        }
+
+        // Reset snowman to initial position
+
+        if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
+        {
+            position = positionInitial;
+            rotation = rotationInitial;
+            scale = scaleInitial;
+
+        }
+
+        // Set rendering mode to lines
+
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        }
+
+
+        // Set rendering mode to points
+
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
+        }
+
+        // Set rendering mode to triangles
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        }
+
         //drawWorld(shaderProgram, colorLoc, worldMatrixLoc, snowTex);
 
 
@@ -1818,7 +1947,7 @@ int main()
        glBindBuffer(GL_ARRAY_BUFFER, mVBO);
        glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
-       drawSnowman(colorShader, position, scale, rotation, numOfVertices);
+       mat4 mainBodyMatrix = drawSnowman(colorShader, position, scale, rotation, numOfVertices);
 
        shaderProgram.Activate();
 
@@ -1831,8 +1960,7 @@ int main()
            tex5.Bind();
        }
 
-       mat4 mainBodyMatrix = mat4(1.0f);
-       glm::mat4 nose = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 8.75f, 1.5f))
+       glm::mat4 nose = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 2.9f, 0.5f))
            * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
        shaderProgram.setMat4("model", nose);
        glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -1844,14 +1972,14 @@ int main()
            tex6.Bind();
        }
 
-       //// Hat
-       glm::mat4 hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 9.7f, 0.f))
-           * glm::scale(glm::mat4(1.0), glm::vec3(2.5f, 0.1f, 2.5f));
+       // Hat
+       glm::mat4 hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.3f, 0.0f))
+           * glm::scale(glm::mat4(1.0), glm::vec3(1.0f, 0.1f, 1.0f));
        shaderProgram.setMat4("model", hat);
        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-       hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 10.5f, 0.f))
-           * glm::scale(glm::mat4(1.0), glm::vec3(1.5f, 1.8f, 1.5f));
+       hat = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 3.3f, 0.f))
+           * glm::scale(glm::mat4(1.0), glm::vec3(0.5f, 1.0f, 0.5f));
        shaderProgram.setMat4("model", hat);
        glDrawArrays(GL_TRIANGLES, 0, 36);
 
