@@ -1856,7 +1856,7 @@ int main()
             rotation *= glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(0.0, 1.0, 0.0));
 
         }
-
+        
 
         if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
