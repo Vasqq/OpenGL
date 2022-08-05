@@ -1561,7 +1561,7 @@ int main()
     // Initial world position, scale and rotation of snowman
 
     glm::vec3 position = glm::vec3(0.0f, 3.0f, 0.0f);
-    glm::vec3 scale = glm::vec3(2.0, 2.0, 2.0);
+    glm::vec3 scale = glm::vec3(1.0, 0.3, 1.0);
     glm::mat4 rotation = glm::mat4(1.0f);
 
     glm::vec3 positionInitial = position;
@@ -1605,27 +1605,26 @@ int main()
     Shader colorShader("color.vert", "color.frag");
 
 	// Generates Vertex Array Object and binds it
-	VAO VAO1;
-	VAO1.Bind();
+	VAO cubeVAO;
+	cubeVAO.Bind();
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(cubeVertices, sizeof(cubeVertices));
+	VBO cubeVBO(cubeVertices, sizeof(cubeVertices));
 	// Generates Element Buffer Object and links it to indices
 	//EBO EBO1(indices, sizeof(indices));
 	// Links VBO attributes such as coordinates and colors to VAO
 	// 
 	// Co ords
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    cubeVAO.LinkAttrib(cubeVBO, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	// Colors
 	//VAO1.LinkAttrib(VBO1, 2, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
 	// Textures
-	VAO1.LinkAttrib(VBO1, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    cubeVAO.LinkAttrib(cubeVBO, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	// Normals
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    cubeVAO.LinkAttrib(cubeVBO, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	// Unbind all to prevent accidentally modifying them
-	VAO1.Unbind();
-	VBO1.Unbind();
-	//EBO1.Unbind();
+    cubeVAO.Unbind();
+    cubeVBO.Unbind();
 
     // MUSEUM FLOOR VERTICES
     // -----------------------------------------------------------------------------------------------------
@@ -1693,23 +1692,23 @@ int main()
 
 
 
-    VAO VAO2;
-    VAO2.Bind();
+    VAO pyVAO;
+    pyVAO.Bind();
     // Generates Vertex Buffer Object and links it to vertices
-    VBO VBO2(pyVertices, sizeof(pyVertices));
+    VBO pyVBO(pyVertices, sizeof(pyVertices));
     // Generates Element Buffer Object and links it to indices
-    EBO EBO2(pyIndices, sizeof(pyIndices));
+    EBO pyEBO(pyIndices, sizeof(pyIndices));
     // Links VBO attributes such as coordinates and colors to VAO
     // Positions
-    VAO2.LinkAttrib(VBO2, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    pyVAO.LinkAttrib(pyVBO, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
     // Tex co-ords
-    VAO2.LinkAttrib(VBO2, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    pyVAO.LinkAttrib(pyVBO, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     // Normals
-    VAO2.LinkAttrib(VBO2, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    pyVAO.LinkAttrib(pyVBO, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     // Unbind all to prevent accidentally modifying them
-    VAO2.Unbind();
-    VBO2.Unbind();
-    EBO2.Unbind();
+    pyVAO.Unbind();
+    pyVBO.Unbind();
+    pyEBO.Unbind();
 
 
 
@@ -1738,9 +1737,9 @@ int main()
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos)  * glm::scale(glm::mat4(1.0), glm::vec3(10.0f));
 
-	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	/*glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::mat4(1.0f);
-	objectModel = glm::translate(objectModel, objectPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 0.01f,100.0f));;
+	objectModel = glm::translate(objectModel, objectPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 0.01f,100.0f));;*/
 
 
 
@@ -1748,7 +1747,7 @@ int main()
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	shaderProgram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
@@ -1756,9 +1755,6 @@ int main()
     Texture tex1("red.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex2("blue.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex3("green.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    
-    //Texture tex5("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
-   // Texture tex6("planksSpec.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
 
     Texture planksTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     planksTex.texUnit(shaderProgram, "tex0", 0);
@@ -1769,11 +1765,7 @@ int main()
     Texture popCat("pop_cat.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     popCat.texUnit(shaderProgram, "tex3", 0);
 
-
-
-
-
-
+    // Get addresses of uniforms
     GLuint colorLoc = glGetUniformLocation(shaderProgram.ID, "lightColor");
     GLuint worldMatrixLoc = glGetUniformLocation(shaderProgram.ID, "model");
 
@@ -1782,9 +1774,9 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
 
-	// Main while loop
+	// Main while loope
 	while (!glfwWindowShouldClose(window))
 	{
 		// Specify the color of the background
@@ -1805,15 +1797,16 @@ int main()
 		// Export the camMatrix to the Vertex Shader of the pyramid
 		camera.Matrix(colorShader, "camMatrix");
 
-        VAO1.Bind();
+        cubeVAO.Bind();
         // Original code from the tutorial
         tex0.texUnit(shaderProgram, "tex0", 0);
 		//// Binds textures so that they appear in the rendering
 		tex0.Bind();
-		//planksSpec.Bind();
-		//////// Bind the VAO so OpenGL knows to use it
+	
 
-        // Draw floor
+        // SETUP WORLD
+        // ----------------------------------------------------------------------
+        // Draw world floor
 
         glm::mat4 floor = glm::mat4(1.0f);
         glm::vec3 floorPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -1825,12 +1818,10 @@ int main()
         popCat.Bind();
 
         glm::mat4 test = glm::mat4(1.0f);
-        glm::vec3 testPos = glm::vec3(15.0f, 0.0f, -15.0f);
+        glm::vec3 testPos = glm::vec3(15.0f, 0.0f, -10.0f);
         test = glm::translate(test, testPos) * glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 0.05f, 20.0f));;
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &test[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
 
 
          // Draw skybox
@@ -1864,6 +1855,11 @@ int main()
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+
+
+        
+
+
         // Draw Museum
         // ---------------------------------------------------------------------------------------------------------
         //
@@ -1885,14 +1881,29 @@ int main()
                                 vec3(5.0f, 0.0f,  15.0f),
                                 vec3(-5.0f, 0.0f,  -15.0f),
                                 vec3(-15.0f, 0.0f,  0.0f),
-                                vec3(-5.0f, 0.0f,  15.0f) };
+                                vec3(-5.0f, 0.0f,  15.0f),
+                                vec3(5.0f, 0.0f,  -7.5f) };
 
         mat4 wallScaleShort = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 20.0f));
         mat4 wallScaleLong = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 25.0f));
         mat4 wallScaleInterior = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 10.0f));
-        mat4 seperatorScaleInterior = glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 20.0f, 10.0f));
+        mat4 seperatorScaleInterior = glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 20.0f, 1.0f));
 
 
+        if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        {
+            if ((camera.Position.x >= 4.0f && camera.Position.x <= 6.0f) && camera.Position.z <= -5.5f && camera.Position.z >= -9.5f)
+            {
+                rotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
+            }
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            break;
+        }
+
+       // rotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
 
         glm::mat4 wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[0]) * wallScaleShort;
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
@@ -1967,11 +1978,14 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
-
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[14])
+          * rotation
+          * glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 5.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
       // Draw roof
-      VAO2.Bind();
+      pyVAO.Bind();
       glm::vec3 roofPos = glm::vec3(0.0f, 10.0f, 0.0f);
       glm::mat4 roofModel = glm::mat4(1.0f);
       roofModel = glm::translate(roofModel, roofPos) * glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 10.0f, 40.0f));
@@ -1988,24 +2002,70 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-   /*   brick.Bind();
+      // DRAW ROOM
+      // ------------------------------------------------------------------------
+      // Floor
+      cubeVAO.Bind();
+      planksTex.Bind();
 
-      glm::mat4 roomFloor = glm::mat4(1.0f);
-      glm::vec3 museumRoomFloorPos = glm::vec3(20.0f, 0.011f, 15.0f);
-      floor = glm::translate(museumFloor, museumRoomFloorPos) * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 1.0f, 10.0f));;
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
-      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);*/
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(15.0f,0.0f,-15.0f))
+          * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 0.1f, 0.1f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(20.0f, 0.0f, -10.0f))
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 0.1f, 0.1f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(15.0f, 0.0f, -5.0f))
+          * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 0.1f, 0.1f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(10.0f, 0.0f, -10.0f))
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 0.1f, 0.1f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      glm::vec3 cubePos[] = { vec3(-25.0f, 0.0f,  10.0f),
+                                vec3(-25.0f, 0.0f, -10.0f),
+                                vec3(25.0f, 0.0f,   10.0f) ,
+                                vec3(25.0f, 0.0f,  -10.f),
+                                vec3(12.5f, 0.0f,  -20.0f),
+                                vec3(-12.5f, 0.0f, -20.0f),
+                                vec3(12.5f, 0.0f,   20.0f),
+                                vec3(-12.5f, 0.0f,  20.0f),
+                                vec3(5.0f, 0.0f,  -15.0f),
+                                vec3(15.0f, 0.0f,  0.0f),
+                                vec3(5.0f, 0.0f,  15.0f),
+                                vec3(-5.0f, 0.0f,  -15.0f),
+                                vec3(-15.0f, 0.0f,  0.0f),
+                                vec3(-5.0f, 0.0f,  15.0f),
+                                vec3(5.0f, 0.0f,  -7.5f) };
+
+      // cubes
+
+      if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+      {
+          if ((camera.Position.x >= 14.0f && camera.Position.x <= 17.0f) && camera.Position.z <= -13.5f && camera.Position.z >= -16.0f)
+          {
+             scale *= vec3(0.1f, 0.1f, 0.1f);
+          }
+      }
+
+      mat4 cube = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(15.5f, 0.0f, -14.5f))
+          * glm::scale(glm::mat4(1.0), scale);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &cube[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 
-      
- 
-
-
-
-        //// Tells OpenGL which Shader Program we want to use
+        // Tells OpenGL which Shader Program we want to use
         colorShader.Activate();
-        ////// Export the camMatrix to the Vertex Shader of the light cube
+        // Export the camMatrix to the Vertex Shader of the light cube
         camera.Matrix(colorShader, "camMatrix");
 
        mVAO.Bind();
@@ -2034,13 +2094,15 @@ int main()
 
 
 	// Delete all the objects we've created
-	VAO1.Delete();
-	VBO1.Delete();
-	//EBO1.Delete();
+    cubeVAO.Delete();
+    cubeVBO.Delete();
+    pyVAO.Delete();
+    pyVBO.Delete();
+    pyEBO.Delete();
+    lightVAO.Delete();
+    lightVBO.Delete();
+    lightEBO.Delete();
 	shaderProgram.Delete();
-	lightVAO.Delete();
-	lightVBO.Delete();
-	lightEBO.Delete();
 	lightShader.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
