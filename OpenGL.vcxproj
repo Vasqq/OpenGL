@@ -183,6 +183,8 @@
     <Image Include="..\..\..\..\Downloads\pop_cat.png" />
     <Image Include="..\..\..\..\Downloads\red.jpg" />
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
+    <Image Include="brick.jpg" />
+    <Image Include="stone.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

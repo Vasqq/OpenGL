@@ -16,6 +16,8 @@ in vec2 texCoord;
 // Gets the Texture Units from the main function
 uniform sampler2D tex0;
 uniform sampler2D tex1;
+uniform sampler2D tex3;
+uniform sampler2D tex4;
 // Gets the color of the light from the main function
 uniform vec4 lightColor;
 // Gets the position of the light from the main function

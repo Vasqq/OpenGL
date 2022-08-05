@@ -52,6 +52,21 @@ void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc, Tex
 
 }
 
+void drawMuseum(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc, Texture tex)
+{
+    // Draw floor
+    glm::mat4 floor = glm::mat4(1.0f);
+    glm::vec3 floorPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    floor = glm::translate(floor, floorPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 0.01f, 100.0f));;
+    glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+    // Draw axis
+
+
+}
+
 
 void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm::mat4 rotation, GLuint numOfVertices)
 {
@@ -1417,11 +1432,11 @@ Vertex vertexBuffer[] = {
 
 // Vertices coordinates
 GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS        /    TexCoord    /       NORMALS     //
-	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+{ //     COORDINATES      /    TexCoord    /       NORMALS     //
+	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f,		    0.0f, 1.0f, 0.0f,
+	-1.0f, 0.0f, -1.0f,		0.0f, 10.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, -1.0f,		10.0f, 10.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f,  1.0f,		10.0f, 0.0f,		0.0f, 1.0f, 0.0f
 };
 
 // Indices for vertices order
@@ -1462,46 +1477,81 @@ GLuint lightIndices[] =
 GLfloat cubeVertices[] = {
     // positions          // normals           // texture coords
        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  20.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  20.0f, 20.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  20.0f, 20.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 20.0f,
        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   20.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   20.0f, 20.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   20.0f, 20.0f,
+       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 20.0f,
        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
 
-       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  20.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  20.0f, 20.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 20.0f,
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 20.0f,
        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  20.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  20.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  20.0f, 20.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 20.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 20.0f,
         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  20.0f, 0.0f,
 
-       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 20.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  20.0f, 20.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  20.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  20.0f, 0.0f,
        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 20.0f,
 
-       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 20.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  20.0f, 20.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  20.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  20.0f, 0.0f,
        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 20.0f
+};
+
+GLfloat pyVertices[] =
+{ //     COORDINATES     /    /    TexCoord   /        NORMALS       //
+    -0.5f, 0.0f,  0.5f,      	 0.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+    -0.5f, 0.0f, -0.5f,    	     0.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+     0.5f, 0.0f, -0.5f,     	 5.0f, 5.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+     0.5f, 0.0f,  0.5f,     	 5.0f, 0.0f,      0.0f, -1.0f, 0.0f, // Bottom side
+
+    -0.5f, 0.0f,  0.5f,     	 0.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+    -0.5f, 0.0f, -0.5f,     	 5.0f, 0.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+     0.0f, 0.8f,  0.0f,     	 2.5f, 5.0f,     -0.8f, 0.5f,  0.0f, // Left Side
+
+    -0.5f, 0.0f, -0.5f,     	 5.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+     0.5f, 0.0f, -0.5f,     	 0.0f, 0.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+     0.0f, 0.8f,  0.0f,     	 2.5f, 5.0f,      0.0f, 0.5f, -0.8f, // Non-facing side
+
+     0.5f, 0.0f, -0.5f,          0.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
+     0.5f, 0.0f,  0.5f,          5.0f, 0.0f,      0.8f, 0.5f,  0.0f, // Right side
+     0.0f, 0.8f,  0.0f,          2.5f, 5.0f,      0.8f, 0.5f,  0.0f, // Right side
+
+     0.5f, 0.0f,  0.5f,          5.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
+    -0.5f, 0.0f,  0.5f,          0.0f, 0.0f,      0.0f, 0.5f,  0.8f, // Facing side
+     0.0f, 0.8f,  0.0f,    	     2.5f, 5.0f,      0.0f, 0.5f,  0.8f  // Facing side
+};
+
+// Indices for vertices order
+GLuint pyIndices[] =
+{
+    0, 1, 2, // Bottom side
+    0, 2, 3, // Bottom side
+    4, 6, 5, // Left side
+    7, 9, 8, // Non-facing side
+    10, 12, 11, // Right side
+    13, 15, 14 // Facing side
 };
 
 
@@ -1577,6 +1627,28 @@ int main()
 	VBO1.Unbind();
 	//EBO1.Unbind();
 
+    // MUSEUM FLOOR VERTICES
+    // -----------------------------------------------------------------------------------------------------
+
+    VAO VAOmuseumFloor;
+    VAOmuseumFloor.Bind();
+    // Generates Vertex Buffer Object and links it to vertices
+    VBO VBOmuseumFloor(vertices, sizeof(vertices));
+    // Generates Element Buffer Object and links it to indices
+    EBO EBOmuseumFloor(indices, sizeof(indices));
+    // Links VBO attributes such as coordinates and colors to VAO
+    // Position
+    VAOmuseumFloor.LinkAttrib(VBOmuseumFloor, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    // Texture
+    VAOmuseumFloor.LinkAttrib(VBOmuseumFloor, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Normals
+    VAOmuseumFloor.LinkAttrib(VBOmuseumFloor, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    // Unbind all to prevent accidentally modifying them
+    VAOmuseumFloor.Unbind();
+    VBOmuseumFloor.Unbind();
+    EBOmuseumFloor.Unbind();
+
+
 
     GLuint numOfVertices = sizeof(vertexBuffer) / sizeof(Vertex);
     GLuint mVBO;
@@ -1618,6 +1690,27 @@ int main()
         (void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
     );
     glEnableVertexAttribArray(2);
+
+
+
+    VAO VAO2;
+    VAO2.Bind();
+    // Generates Vertex Buffer Object and links it to vertices
+    VBO VBO2(pyVertices, sizeof(pyVertices));
+    // Generates Element Buffer Object and links it to indices
+    EBO EBO2(pyIndices, sizeof(pyIndices));
+    // Links VBO attributes such as coordinates and colors to VAO
+    // Positions
+    VAO2.LinkAttrib(VBO2, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    // Tex co-ords
+    VAO2.LinkAttrib(VBO2, 3, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    // Normals
+    VAO2.LinkAttrib(VBO2, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    // Unbind all to prevent accidentally modifying them
+    VAO2.Unbind();
+    VBO2.Unbind();
+    EBO2.Unbind();
+
 
 
 
@@ -1663,7 +1756,19 @@ int main()
     Texture tex1("red.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex2("blue.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex3("green.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    Texture tex4("pop_cat.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    
+    //Texture tex5("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+   // Texture tex6("planksSpec.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+
+    Texture planksTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    planksTex.texUnit(shaderProgram, "tex0", 0);
+    Texture planksSpec("planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
+    planksSpec.texUnit(shaderProgram, "tex1", 1);
+    Texture brick("stone.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    brick.texUnit(shaderProgram, "tex2", 0);
+    Texture popCat("pop_cat.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    popCat.texUnit(shaderProgram, "tex3", 0);
+
 
 
 
@@ -1701,8 +1806,6 @@ int main()
 		camera.Matrix(colorShader, "camMatrix");
 
         VAO1.Bind();
-
-
         // Original code from the tutorial
         tex0.texUnit(shaderProgram, "tex0", 0);
 		//// Binds textures so that they appear in the rendering
@@ -1711,21 +1814,30 @@ int main()
 		//////// Bind the VAO so OpenGL knows to use it
 
         // Draw floor
+
         glm::mat4 floor = glm::mat4(1.0f);
         glm::vec3 floorPos = glm::vec3(0.0f, 0.0f, 0.0f);
         floor = glm::translate(floor, floorPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 0.01f, 100.0f));;
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        tex4.texUnit(shaderProgram, "tex0", 0);
-        tex4.Bind();
+
+        popCat.Bind();
+
+        glm::mat4 test = glm::mat4(1.0f);
+        glm::vec3 testPos = glm::vec3(15.0f, 0.0f, -15.0f);
+        test = glm::translate(test, testPos) * glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 0.05f, 20.0f));;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &test[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
 
 
          // Draw skybox
         glm::mat4 skybox = glm::mat4(1.0f);
         glm::vec3 skyboxPos = glm::vec3(0.0f, 0.0f, 0.0f);
-        floor = glm::translate(skybox, skyboxPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 100.0f, 100.0f));;
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
+        skybox = glm::translate(skybox, skyboxPos) * glm::scale(glm::mat4(1.0), glm::vec3(100.0f, 100.0f, 100.0f));;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &skybox[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
@@ -1734,7 +1846,7 @@ int main()
         tex1.texUnit(shaderProgram, "tex0", 0);
         tex1.Bind();
 
-       glm::mat4 axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(5.0f, 0.1f, 0.1f));
+        glm::mat4 axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(5.0f, 0.1f, 0.1f));
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -1752,12 +1864,143 @@ int main()
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        // Draw Museum
+        // ---------------------------------------------------------------------------------------------------------
+        //
 
-        //drawWorld(shaderProgram, colorLoc, worldMatrixLoc, snowTex);
+        brick.Bind();
+
+        glm::mat4 mainBodyMatrix = glm::mat4(1.0f);
+
+        glm::vec3 wallPos[] = { vec3(-25.0f, 0.0f,  10.0f),
+                                vec3(-25.0f, 0.0f, -10.0f),
+                                vec3(25.0f, 0.0f,   10.0f) ,
+                                vec3(25.0f, 0.0f,  -10.f),
+                                vec3(12.5f, 0.0f,  -20.0f),
+                                vec3(-12.5f, 0.0f, -20.0f),
+                                vec3(12.5f, 0.0f,   20.0f),
+                                vec3(-12.5f, 0.0f,  20.0f),
+                                vec3(5.0f, 0.0f,  -15.0f),
+                                vec3(15.0f, 0.0f,  0.0f),
+                                vec3(5.0f, 0.0f,  15.0f),
+                                vec3(-5.0f, 0.0f,  -15.0f),
+                                vec3(-15.0f, 0.0f,  0.0f),
+                                vec3(-5.0f, 0.0f,  15.0f) };
+
+        mat4 wallScaleShort = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 20.0f));
+        mat4 wallScaleLong = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 25.0f));
+        mat4 wallScaleInterior = glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 10.0f));
+        mat4 seperatorScaleInterior = glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 20.0f, 10.0f));
 
 
-		//////// Draw primitives, number of indices, datatype of indices, index of indices
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glm::mat4 wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[0]) * wallScaleShort;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[1])
+            * wallScaleShort;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[2])
+            * wallScaleShort;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[3])
+            * wallScaleShort;
+        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[4])
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * wallScaleLong;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[5])
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * wallScaleLong;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[6])
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * wallScaleLong;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[7])
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * wallScaleLong;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[8])
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[9])
+          * seperatorScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[10])
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[11])
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[12])
+          * seperatorScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[13])
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+      // Draw roof
+      VAO2.Bind();
+      glm::vec3 roofPos = glm::vec3(0.0f, 10.0f, 0.0f);
+      glm::mat4 roofModel = glm::mat4(1.0f);
+      roofModel = glm::translate(roofModel, roofPos) * glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 10.0f, 40.0f));
+      shaderProgram.setMat4("model", roofModel);
+      glDrawElements(GL_TRIANGLES, sizeof(pyIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+      
+      // Draw museum floor
+      VAOmuseumFloor.Bind();
+      planksTex.Bind();
+      planksSpec.Bind();
+      glm::mat4 museumFloor = glm::mat4(1.0f);
+      glm::vec3 museumFloorPos = glm::vec3(0.0f, 0.01f, 0.0f);
+      floor = glm::translate(museumFloor, museumFloorPos) * glm::scale(glm::mat4(1.0), glm::vec3(25.0f, 0.01f, 20.0f));;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
+      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+   /*   brick.Bind();
+
+      glm::mat4 roomFloor = glm::mat4(1.0f);
+      glm::vec3 museumRoomFloorPos = glm::vec3(20.0f, 0.011f, 15.0f);
+      floor = glm::translate(museumFloor, museumRoomFloorPos) * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 1.0f, 10.0f));;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
+      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);*/
+
+
+
+      
+ 
+
 
 
         //// Tells OpenGL which Shader Program we want to use
@@ -1769,7 +2012,7 @@ int main()
        glBindBuffer(GL_ARRAY_BUFFER, mVBO);
        glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 
-       drawSnowman(colorShader, position, scale, rotation, numOfVertices);
+       //drawSnowman(colorShader, position, scale, rotation, numOfVertices);
 
 
 		//// Tells OpenGL which Shader Program we want to use
