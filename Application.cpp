@@ -1513,6 +1513,9 @@ int main()
     glm::vec3 positionInitial = position;
     glm::vec3 scaleInitial = scale;
     glm::mat4 rotationInitial = rotation;
+    vec3 initialCamPos = vec3(0.0f, 5.0f, 20.0f);
+    //vec3 initialCamOrientation = vec3(1.0f, 1.0f, 1.0f);
+
 
 
 	// Initialize GLFW
@@ -1697,7 +1700,6 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-    vec3 initialCamPos = vec3(0.0f, 5.0f, 20.0f);
 	// Creates camera object
 	Camera camera(width, height, initialCamPos);
 
@@ -1863,7 +1865,9 @@ int main()
 
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             {
-                position += glm::vec3(-0.5f, 0.0f, 0.0f);
+                position += glm::vec3(-0.25f, 0.0f, 0.0f);
+                rotation *= glm::rotate(glm::mat4(1.0f), (float)sin(glfwGetTime() * 10.0f) * 0.05f, glm::vec3(0.0, 0.0, 1.0));
+
 
             }
 
@@ -1872,7 +1876,8 @@ int main()
 
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             {
-                position += glm::vec3(0.5f, 0.0f, 0.0f);
+                position += glm::vec3(0.25f, 0.0f, 0.0f);
+                rotation *= glm::rotate(glm::mat4(1.0f), (float)sin(glfwGetTime() * -10.0f) * 0.05f, glm::vec3(0.0, 0.0, 1.0));
 
             }
 
@@ -1881,20 +1886,24 @@ int main()
 
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             {
-                position += glm::vec3(0.0f, 0.0f, 0.5f);
+                position += glm::vec3(0.0f, 0.0f, 0.25f);
+                rotation *= glm::rotate(glm::mat4(1.0f), (float)sin(glfwGetTime() * 10.0f) * 0.05f, glm::vec3(1.0, 0.0, 0.0));
 
             }
 
-            // Move snowman back
+           
 
-
+            // Move snowman backwards
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             {
-                position += glm::vec3(0.0f, 0.0f, -0.5f);
+                position += glm::vec3(0.0f, 0.0f, -0.25f);
+                rotation *= glm::rotate(glm::mat4(1.0f), (float)sin(glfwGetTime() * -10.0f) * 0.05f, glm::vec3(1.0, 0.0, 0.0));
 
             }
 
         }
+
+        // Move snowman back
 
         // Reset snowman to initial position
 
@@ -1903,6 +1912,8 @@ int main()
             position = positionInitial;
             rotation = rotationInitial;
             scale = scaleInitial;
+            camera.Position = initialCamPos;
+           // camera.Orientation = initialCamOrientation;
 
         }
 
