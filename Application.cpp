@@ -23,8 +23,8 @@
 
 using namespace glm;
 
-const unsigned int width = 800;
-const unsigned int height = 800;
+const unsigned int width = 1440;
+const unsigned int height = 900;
 
 void drawWorld(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc, Texture tex)
 {
@@ -1998,7 +1998,7 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-      // DRAW ROOM
+      // DRAW SPACE ROOM
       // ------------------------------------------------------------------------
       // Floor
       cubeVAO.Bind();
@@ -2050,24 +2050,42 @@ int main()
       //vec3 cubePos = initialCubePos[0];
 
       // check if near cube
-    /*  if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-      {
-          if ((camera.Position.x >= initialCubePos[0].x + -1.0f && camera.Position.x <= initialCubePos[0].x + 1.0f)
-              && (camera.Position.z <= initialCubePos[0].z + 1.0f && camera.Position.z >= initialCubePos[0].z - 1.0f))
-          {
-              cubePos = camera.Position + cubePos;
-          }
-      }*/
+    
 
-      if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+
+      if ((camera.Position.x >= cubePos.x + -1.0f && camera.Position.x <= cubePos.x + 1.0f)
+          && (camera.Position.z <= cubePos.z + 1.0f && camera.Position.z >= cubePos.z - 1.0f))
+      {
+          if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+          {
+              cubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+          }
+
+          if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+          {
+              cubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+          }
+  
+      }
+
+      if ((cubePos.x >= plates[0].x + -1.0f && cubePos.x <= plates[0].x + 1.0f)
+          && (cubePos.z <= plates[0].z + 1.0f && cubePos.z >= plates[0].z - 1.0f))
+      {
+          scale *= vec3(0.1f, 0.1f, 0.1f);
+      }
+      else
+      {
+          scale = scaleInitial;
+      }
+    /*  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
       {
           cubePos += glm::vec3(0.1f, 0.0f, 0.0f);
 
-      }
+      }*/
 
 
       mat4 block = mainBodyMatrix * glm::translate(glm::mat4(1.0), cubePos)
-          * glm::scale(glm::mat4(1.0), scale);
+          * glm::scale(glm::mat4(1.0), vec3(0.5f));
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &block[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
