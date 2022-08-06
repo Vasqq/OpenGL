@@ -51,14 +51,14 @@ void Camera::Inputs(GLFWwindow* window)
 	{
 		Position += speed * glm::normalize(glm::cross(Orientation, Up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-	{
-		Position += speed * Up;
-	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	{
-		Position += speed * -Up;
-	}
+	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	//{
+	//	Position += speed * Up;
+	//}
+	//if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	//{
+	//	Position += speed * -Up;
+	//}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
 		speed = 0.4f;
@@ -81,13 +81,13 @@ void Camera::Inputs(GLFWwindow* window)
 	float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
 	// Calculates upcoming vertical change in the Orientation
-	//glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+	glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
 
 	// Decides whether or not the next vertical Orientation is legal or not
-	//if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-	//{
-	//	Orientation = newOrientation;
-	//}
+	if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+	{
+		//Orientation = newOrientation;
+	}
 
 	// Rotates the Orientation left and right
 	Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);

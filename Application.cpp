@@ -1559,7 +1559,7 @@ int main()
 
 {
     // Initial world position, scale and rotation of snowman
-
+    glm::vec3 cubePos = vec3(10.5f, 0.5f, -14.5f);
     glm::vec3 position = glm::vec3(0.0f, 3.0f, 0.0f);
     glm::vec3 scale = glm::vec3(1.0, 0.3, 1.0);
     glm::mat4 rotation = glm::mat4(1.0f);
@@ -1856,10 +1856,6 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-
-        
-
-
         // Draw Museum
         // ---------------------------------------------------------------------------------------------------------
         //
@@ -2030,36 +2026,66 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      glm::vec3 cubePos[] = { vec3(-25.0f, 0.0f,  10.0f),
-                                vec3(-25.0f, 0.0f, -10.0f),
-                                vec3(25.0f, 0.0f,   10.0f) ,
-                                vec3(25.0f, 0.0f,  -10.f),
-                                vec3(12.5f, 0.0f,  -20.0f),
-                                vec3(-12.5f, 0.0f, -20.0f),
-                                vec3(12.5f, 0.0f,   20.0f),
-                                vec3(-12.5f, 0.0f,  20.0f),
-                                vec3(5.0f, 0.0f,  -15.0f),
-                                vec3(15.0f, 0.0f,  0.0f),
-                                vec3(5.0f, 0.0f,  15.0f),
-                                vec3(-5.0f, 0.0f,  -15.0f),
-                                vec3(-15.0f, 0.0f,  0.0f),
-                                vec3(-5.0f, 0.0f,  15.0f),
-                                vec3(5.0f, 0.0f,  -7.5f) };
+      // plates
+      glm::vec3 plates[] = { vec3(15.5f, 0.0f, -14.5f)
+                            };
 
-      // cubes
-
+      // check if near plate
       if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
       {
-          if ((camera.Position.x >= 14.0f && camera.Position.x <= 17.0f) && camera.Position.z <= -13.5f && camera.Position.z >= -16.0f)
+          if ((camera.Position.x >= plates[0].x + -1.0f && camera.Position.x <= plates[0].x + 1.0f) 
+            && (camera.Position.z <= plates[0].z + 1.0f && camera.Position.z >= plates[0].z - 1.0f))
           {
              scale *= vec3(0.1f, 0.1f, 0.1f);
           }
       }
 
-      mat4 cube = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(15.5f, 0.0f, -14.5f))
+      // draw plate
+      mat4 plate = mainBodyMatrix * glm::translate(glm::mat4(1.0), plates[0])
           * glm::scale(glm::mat4(1.0), scale);
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &cube[0][0]);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plate[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      //cubes
+      //vec3 cubePos = initialCubePos[0];
+
+      // check if near cube
+    /*  if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+      {
+          if ((camera.Position.x >= initialCubePos[0].x + -1.0f && camera.Position.x <= initialCubePos[0].x + 1.0f)
+              && (camera.Position.z <= initialCubePos[0].z + 1.0f && camera.Position.z >= initialCubePos[0].z - 1.0f))
+          {
+              cubePos = camera.Position + cubePos;
+          }
+      }*/
+
+      if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+      {
+          cubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+
+      }
+
+
+      mat4 block = mainBodyMatrix * glm::translate(glm::mat4(1.0), cubePos)
+          * glm::scale(glm::mat4(1.0), scale);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &block[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
