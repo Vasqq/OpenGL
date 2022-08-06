@@ -86,7 +86,7 @@ void Camera::Inputs(GLFWwindow* window)
 	// Decides whether or not the next vertical Orientation is legal or not
 	if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
 	{
-		//Orientation = newOrientation;
+		Orientation = newOrientation;
 	}
 
 	// Rotates the Orientation left and right

@@ -184,6 +184,7 @@
     <Image Include="..\..\..\..\Downloads\red.jpg" />
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
     <Image Include="brick.jpg" />
+    <Image Include="concrete.jpg" />
     <Image Include="legoBlue.jpg" />
     <Image Include="legoYellow.jpg" />
     <Image Include="stone.jpg" />
