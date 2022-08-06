@@ -129,5 +129,11 @@
     <Image Include="stone.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
+    <Image Include="legoBlue.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="legoYellow.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

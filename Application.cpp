@@ -116,7 +116,7 @@ void drawSnowman(Shader shaderProgram, glm::vec3 position, glm::vec3 scale, glm:
     // Nose
 
     sphereColor = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
-
+ 
     glm::mat4 nose = mainBodyMatrix * glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 2.8f, 0.35f))
         * glm::scale(glm::mat4(1.0), glm::vec3(0.1f, 0.1f, 0.5f));
     glUniform4f(glGetUniformLocation(shaderProgram.ID, "color"), sphereColor.x, sphereColor.y, sphereColor.z, sphereColor.w);
@@ -1559,7 +1559,19 @@ int main()
 
 {
     // Initial world position, scale and rotation of snowman
-    glm::vec3 cubePos = vec3(10.5f, 0.5f, -14.5f);
+    glm::vec3 redCubePos = vec3(10.5f, 0.5f, -14.5f);
+    glm::vec3 blueCubePos = vec3(10.5f, 0.5f, -10.5f);
+    glm::vec3 greenCubePos = vec3(10.5f, 0.5f, -7.5f);
+
+    glm::vec3 redPlatePos = vec3(15.5f, 0.0f, -14.5f);
+    glm::vec3 bluePlatePos = vec3(15.5f, 0.0f, -10.5f);
+    glm::vec3 greenPlatePos = vec3(15.5f, 0.0f, -7.5f);
+
+
+    glm::vec3 redPlatePosInitial = redPlatePos;
+    glm::vec3 bluePlatePosInitial = bluePlatePos;
+    glm::vec3 greenPlatePosInitial = greenPlatePos;
+
     glm::vec3 position = glm::vec3(0.0f, 3.0f, 0.0f);
     glm::vec3 scale = glm::vec3(1.0, 0.3, 1.0);
     glm::mat4 rotation = glm::mat4(1.0f);
@@ -1567,6 +1579,12 @@ int main()
     glm::vec3 positionInitial = position;
     glm::vec3 scaleInitial = scale;
     glm::mat4 rotationInitial = rotation;
+
+    bool redPlateOn = false;
+    bool bluePlateOn = false;
+    bool greenPlateOn = false;
+
+
 
 
 	// Initialize GLFW
@@ -1754,7 +1772,7 @@ int main()
     Texture tex0("snow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex1("red.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     Texture tex2("blue.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    Texture tex3("green.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    Texture tex3("legoYellow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
 
     Texture planksTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     planksTex.texUnit(shaderProgram, "tex0", 0);
@@ -2026,84 +2044,139 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      // plates
-      glm::vec3 plates[] = { vec3(15.5f, 0.0f, -14.5f)
-                            };
 
-      // check if near plate
-      if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-      {
-          if ((camera.Position.x >= plates[0].x + -1.0f && camera.Position.x <= plates[0].x + 1.0f) 
-            && (camera.Position.z <= plates[0].z + 1.0f && camera.Position.z >= plates[0].z - 1.0f))
-          {
-             scale *= vec3(0.1f, 0.1f, 0.1f);
-          }
-      }
-
-      // draw plate
-      mat4 plate = mainBodyMatrix * glm::translate(glm::mat4(1.0), plates[0])
+      // DRAW PRESURE PLATES
+      // red pressure plate
+      mat4 plateRed = mainBodyMatrix * glm::translate(glm::mat4(1.0), redPlatePos)
           * glm::scale(glm::mat4(1.0), scale);
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plate[0][0]);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plateRed[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      //cubes
-      //vec3 cubePos = initialCubePos[0];
+      // blue pressure plate
+      mat4 plateBlue = mainBodyMatrix * glm::translate(glm::mat4(1.0), bluePlatePos)
+          * glm::scale(glm::mat4(1.0), scale);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plateBlue[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      // check if near cube
-    
+      // green pressure plate
+      mat4 plateGreen = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenPlatePos)
+          * glm::scale(glm::mat4(1.0), scale);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plateGreen[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-      if ((camera.Position.x >= cubePos.x + -1.0f && camera.Position.x <= cubePos.x + 1.0f)
-          && (camera.Position.z <= cubePos.z + 1.0f && camera.Position.z >= cubePos.z - 1.0f))
+      //MOVABLE BLOCKS
+
+      // check if player is near cube
+
+      if ((camera.Position.x >= redCubePos.x + -1.0f && camera.Position.x <= redCubePos.x + 1.0f)
+          && (camera.Position.z <= redCubePos.z + 1.0f && camera.Position.z >= redCubePos.z - 1.0f))
       {
           if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
           {
-              cubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+              redCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
           }
 
           if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
           {
-              cubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+              redCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
           }
   
       }
 
-      if ((cubePos.x >= plates[0].x + -1.0f && cubePos.x <= plates[0].x + 1.0f)
-          && (cubePos.z <= plates[0].z + 1.0f && cubePos.z >= plates[0].z - 1.0f))
+      else if ((camera.Position.x >= blueCubePos.x + -1.0f && camera.Position.x <= blueCubePos.x + 1.0f)
+          && (camera.Position.z <= blueCubePos.z + 1.0f && camera.Position.z >= blueCubePos.z - 1.0f))
+          {
+
+              if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+              {
+                  blueCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+              {
+                  blueCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+              }
+          }
+
+      else if ((camera.Position.x >= greenCubePos.x + -1.0f && camera.Position.x <= greenCubePos.x + 1.0f)
+          && (camera.Position.z <= greenCubePos.z + 1.0f && camera.Position.z >= greenCubePos.z - 1.0f))
+          {
+
+              if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+              {
+                  greenCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+              {
+                  greenCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+              }
+          }
+     
+
+      // check if red cube is on plate
+      if ((redCubePos.x >= redPlatePos.x + -1.0f && redCubePos.x <= redPlatePos.x + 1.0f)
+          && (redCubePos.z <= redPlatePos.z + 1.0f && redCubePos.z >= redPlatePos.z - 1.0f))
       {
-          scale *= vec3(0.1f, 0.1f, 0.1f);
+          redPlatePos += vec3(0.0f, -10.0f, 0.0f);
+          redPlateOn = true;
       }
       else
       {
-          scale = scaleInitial;
+          redPlatePos = redPlatePosInitial;
+          redPlateOn = false;
       }
-    /*  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+
+      // check if blue cube is on plate
+      if ((blueCubePos.x >= bluePlatePos.x + -1.0f && blueCubePos.x <= bluePlatePos.x + 1.0f)
+          && (blueCubePos.z <= bluePlatePos.z + 1.0f && blueCubePos.z >= bluePlatePos.z - 1.0f))
       {
-          cubePos += glm::vec3(0.1f, 0.0f, 0.0f);
+          bluePlatePos += vec3(0.0f, -10.0f, 0.0f);
+          bluePlateOn = true;
+      }
+      else
+      {
+          bluePlatePos = bluePlatePosInitial;
+          bluePlateOn = false;
+      }
 
-      }*/
+      // check if green cube is on plate
+      if ((greenCubePos.x >= greenPlatePos.x + -1.0f && greenCubePos.x <= greenPlatePos.x + 1.0f)
+          && (greenCubePos.z <= greenPlatePos.z + 1.0f && greenCubePos.z >= greenPlatePos.z - 1.0f))
+      {
+          greenPlatePos += vec3(0.0f, -10.0f, 0.0f);
+          greenPlateOn = true;
+      }
+      else
+      {
+          greenPlatePos = greenPlatePosInitial;
+          greenPlateOn = false;
+      }
 
 
-      mat4 block = mainBodyMatrix * glm::translate(glm::mat4(1.0), cubePos)
+ 
+
+      tex1.Bind();
+
+      mat4 redBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), redCubePos)
           * glm::scale(glm::mat4(1.0), vec3(0.5f));
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &block[0][0]);
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &redBlock[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
+      tex2.Bind();
+      
+      mat4 blueBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), blueCubePos)
+          * glm::scale(glm::mat4(1.0), vec3(0.5f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &blueBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
+      tex3.Bind();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+      mat4 greenBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenCubePos)
+          * glm::scale(glm::mat4(1.0), vec3(0.5f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &greenBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 
