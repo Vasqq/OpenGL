@@ -21,6 +21,9 @@
 #include"VBO.h"
 #include"EBO.h"
 #include"Camera.h"
+#include"Sound.h"
+#include"SoundManager.h"
+
 
 using namespace glm;
 
@@ -579,14 +582,20 @@ GLuint pyIndices[] =
 int main()
 
 {
+    SoundManager soundManager;
+    soundManager.Initialize();
+    soundManager.LoadSound();
+
     // Initial world position, scale and rotation of snowman
     glm::vec3 redCubePos = vec3(10.5f, 0.5f, -14.5f);
-    glm::vec3 blueCubePos = vec3(10.5f, 0.5f, -10.5f);
-    glm::vec3 greenCubePos = vec3(10.5f, 0.5f, -7.5f);
+    glm::vec3 blueCubePos = vec3(13.5f, 0.5f, -10.5f);
+    glm::vec3 greenCubePos = vec3(16.5f, 0.5f, -7.5f);
+    glm::vec3 trophieCubePos = vec3(23.5f, -2.5f, -10.5f);
 
-    glm::vec3 redPlatePos = vec3(15.5f, 0.0f, -14.5f);
-    glm::vec3 bluePlatePos = vec3(15.5f, 0.0f, -10.5f);
-    glm::vec3 greenPlatePos = vec3(15.5f, 0.0f, -7.5f);
+
+    glm::vec3 redPlatePos = vec3(13.5f, 0.0f, -14.5f);
+    glm::vec3 bluePlatePos = vec3(17.5f, 0.0f, -10.5f);
+    glm::vec3 greenPlatePos = vec3(11.5f, 0.0f, -6.5f);
 
 
     glm::vec3 redPlatePosInitial = redPlatePos;
@@ -746,7 +755,7 @@ int main()
 	// Generates Element Buffer Object and links it to indices
 	//EBO lightEBO(lightIndices, sizeof(lightIndices));
 	// Links VBO attributes such as coordinates and colors to VAO
-	lightVAO.LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+	lightVAO.LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	// Unbind all to prevent accidentally modifying them
 	lightVAO.Unbind();
 	lightVBO.Unbind();
@@ -771,23 +780,57 @@ int main()
 
     // Initialize textures
 
-    Texture tex0("snow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    Texture tex1("red.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    Texture tex2("blue.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    Texture snowTex("snow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    snowTex.texUnit(shaderProgram, "tex4", 0);
+    Texture skyTex("sky.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    skyTex.texUnit(shaderProgram, "tex4", 0);
     
-
     Texture planksTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
-    planksTex.texUnit(shaderProgram, "tex4", 0);
+    planksTex.texUnit(shaderProgram, "tex0", 0);
     Texture planksSpec("planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
-    planksSpec.texUnit(shaderProgram, "tex4", 1);
-    Texture brick("stone.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    planksSpec.texUnit(shaderProgram, "tex1", 1);
+
+    Texture grassTex("grass.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    grassTex.texUnit(shaderProgram, "tex3", 0);
+
+    Texture goldTex("gold.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    goldTex.texUnit(shaderProgram, "tex2", 1);
+    Texture diamondTex("diamond.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    diamondTex.texUnit(shaderProgram, "tex3", 1);
+    Texture obsidianTex("obsidian.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    obsidianTex.texUnit(shaderProgram, "tex3", 1);
+
+    Texture trophyTex("trophy.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    trophyTex.texUnit(shaderProgram, "tex4", 0);
+
+
+    Texture brick("stoneArt.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     brick.texUnit(shaderProgram, "tex4", 0);
     Texture popCat("pop_cat.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     popCat.texUnit(shaderProgram, "tex1", 0);
     Texture concrete("concrete.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     concrete.texUnit(shaderProgram, "tex3", 0);
-    Texture legoTexture("legoYellow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
-    legoTexture.texUnit(shaderProgram, "tex0", 0);
+    Texture legoYellowTex("legoYellow.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    legoYellowTex.texUnit(shaderProgram, "tex0", 0);
+    Texture legoBlueTex("legoBlueTex.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    legoBlueTex.texUnit(shaderProgram, "tex0", 0);
+    Texture legoRedTex("legoRed.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    legoYellowTex.texUnit(shaderProgram, "tex0", 0);
+    Texture legoGreenTex("legoGreen.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    legoBlueTex.texUnit(shaderProgram, "tex0", 0);
+
+    Texture guitarTex("guitar.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    guitarTex.texUnit(shaderProgram, "tex0", 0);
+    Texture harpTex("harp.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    harpTex.texUnit(shaderProgram, "tex0", 0);
+    Texture pianoTex("piano.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    pianoTex.texUnit(shaderProgram, "tex0", 0);
+    Texture saxTex("sax.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    saxTex.texUnit(shaderProgram, "tex0", 0);
+    Texture musicTex("music.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
+    musicTex.texUnit(shaderProgram, "tex0", 0);
+
+
 
 
     // Get addresses of uniforms
@@ -823,14 +866,13 @@ int main()
 
         cubeVAO.Bind();
         // Original code from the tutorial
-        tex0.texUnit(shaderProgram, "tex4", 0);
-		//// Binds textures so that they appear in the rendering
-		tex0.Bind();
+		// Binds textures so that they appear in the rendering
 	
 
         // SETUP WORLD
         // ----------------------------------------------------------------------
         // Draw world floor
+        snowTex.Bind();
 
         glm::mat4 floor = glm::mat4(1.0f);
         glm::vec3 floorPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -838,16 +880,7 @@ int main()
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
-        popCat.Bind();
-
-        glm::mat4 test = glm::mat4(1.0f);
-        glm::vec3 testPos = glm::vec3(15.0f, 0.0f, -10.0f);
-        test = glm::translate(test, testPos) * glm::scale(glm::mat4(1.0), glm::vec3(20.0f, 0.05f, 20.0f));;
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &test[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
+        skyTex.Bind();
          // Draw skybox
         glm::mat4 skybox = glm::mat4(1.0f);
         glm::vec3 skyboxPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -855,28 +888,6 @@ int main()
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &skybox[0][0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
-        // Draw axis
-
-        tex1.texUnit(shaderProgram, "tex1", 0);
-        tex1.Bind();
-
-        glm::mat4 axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(5.0f, 0.1f, 0.1f));
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-        tex2.texUnit(shaderProgram, "tex1", 0);
-        tex2.Bind();
-
-        axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.5f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 5.0f, 0.1f));
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-        axisMatrix = glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), 5.0f * 0, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.5f)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 5.0f));
-        glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &axisMatrix[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         // Draw Museum
@@ -922,7 +933,9 @@ int main()
             break;
         }
 
-       // rotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        cubeSpaceRoomVAO.Bind();
+
 
         glm::mat4 wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[0]) * wallScaleShort;
         glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
@@ -997,11 +1010,7 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[14])
-          * rotation
-          * glm::scale(glm::mat4(1.0), glm::vec3(0.01f, 20.0f, 5.0f));
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
+      
 
       // Draw roof
       pyVAO.Bind();
@@ -1024,8 +1033,18 @@ int main()
       // DRAW SPACE ROOM
       // ------------------------------------------------------------------------
       // Floor
+      //cubeVAO.Bind();
+      grassTex.Bind();
+      VAOmuseumFloor.Bind();
+      glm::mat4 roomFloor = glm::mat4(1.0f);
+      glm::vec3 roomFloorPos = glm::vec3(15.0f, 0.04f, -10.0f);
+      roomFloor = glm::translate(roomFloor, roomFloorPos) * glm::scale(glm::mat4(1.0), glm::vec3(5.0f));;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &roomFloor[0][0]);
+      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
       cubeVAO.Bind();
-      planksTex.Bind();
+
+      obsidianTex.Bind();
 
       wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(15.0f,0.0f,-15.0f))
           * glm::scale(glm::mat4(1.0), glm::vec3(10.0f, 0.1f, 0.1f));
@@ -1057,14 +1076,24 @@ int main()
       if ((camera.Position.x >= redCubePos.x + -1.0f && camera.Position.x <= redCubePos.x + 1.0f)
           && (camera.Position.z <= redCubePos.z + 1.0f && camera.Position.z >= redCubePos.z - 1.0f))
       {
-          if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+          if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
           {
               redCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
           }
 
-          if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+          if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
           {
               redCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+          }
+
+          if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+          {
+              redCubePos += glm::vec3(0.0f, 0.0f, -0.1f);
+          }
+
+          if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+          {
+              redCubePos += glm::vec3(0.0f, 0.0f, 0.1f);
           }
   
       }
@@ -1073,14 +1102,24 @@ int main()
           && (camera.Position.z <= blueCubePos.z + 1.0f && camera.Position.z >= blueCubePos.z - 1.0f))
           {
 
-              if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+              if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
               {
                   blueCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
               }
 
-              if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+              if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
               {
                   blueCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+              {
+                  blueCubePos += glm::vec3(0.0f, 0.0f, -0.1f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+              {
+                  blueCubePos += glm::vec3(0.0f, 0.0f, 0.1f);
               }
           }
 
@@ -1088,24 +1127,34 @@ int main()
           && (camera.Position.z <= greenCubePos.z + 1.0f && camera.Position.z >= greenCubePos.z - 1.0f))
           {
 
-              if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+              if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
               {
                   greenCubePos += glm::vec3(0.1f, 0.0f, 0.0f);
               }
 
-              if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+              if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
               {
                   greenCubePos += glm::vec3(-0.1f, 0.0f, 0.0f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+              {
+                  greenCubePos += glm::vec3(0.0f, 0.0f, -0.1f);
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+              {
+                  greenCubePos += glm::vec3(0.0f, 0.0f, 0.1f);
               }
           }
      
       // CUBE ON PLATE LOGIC
       // ---------------------------------------------------------------------------------
       // check if red cube is on plate
-      if ((redCubePos.x >= redPlatePos.x + -1.0f && redCubePos.x <= redPlatePos.x + 1.0f)
-          && (redCubePos.z <= redPlatePos.z + 1.0f && redCubePos.z >= redPlatePos.z - 1.0f))
+      if ((redCubePos.x >= redPlatePos.x + -0.5f && redCubePos.x <= redPlatePos.x + 0.5f)
+          && (redCubePos.z <= redPlatePos.z + 0.5f && redCubePos.z >= redPlatePos.z - 0.5f))
       {
-          redPlatePos += vec3(0.0f, -10.0f, 0.0f);
+          redPlatePos += (float)glfwGetTime() * vec3(0.0f, -0.0001f, 0.0f);
           redPlateOn = true;
       }
       else
@@ -1115,10 +1164,10 @@ int main()
       }
 
       // check if blue cube is on plate
-      if ((blueCubePos.x >= bluePlatePos.x + -1.0f && blueCubePos.x <= bluePlatePos.x + 1.0f)
-          && (blueCubePos.z <= bluePlatePos.z + 1.0f && blueCubePos.z >= bluePlatePos.z - 1.0f))
+      if ((blueCubePos.x >= bluePlatePos.x + -0.5f && blueCubePos.x <= bluePlatePos.x + 0.5f)
+          && (blueCubePos.z <= bluePlatePos.z + 0.5f && blueCubePos.z >= bluePlatePos.z - 0.5f))
       {
-          bluePlatePos += vec3(0.0f, -10.0f, 0.0f);
+          bluePlatePos += (float)glfwGetTime() * vec3(0.0f, -0.0001f, 0.0f);
           bluePlateOn = true;
       }
       else
@@ -1128,10 +1177,10 @@ int main()
       }
 
       // check if green cube is on plate
-      if ((greenCubePos.x >= greenPlatePos.x + -1.0f && greenCubePos.x <= greenPlatePos.x + 1.0f)
-          && (greenCubePos.z <= greenPlatePos.z + 1.0f && greenCubePos.z >= greenPlatePos.z - 1.0f))
+      if ((greenCubePos.x >= greenPlatePos.x + -0.5f && greenCubePos.x <= greenPlatePos.x + 0.5f)
+          && (greenCubePos.z <= greenPlatePos.z + 0.5f && greenCubePos.z >= greenPlatePos.z - 0.5f))
       {
-          greenPlatePos += vec3(0.0f, -10.0f, 0.0f);
+          greenPlatePos += (float)glfwGetTime() * vec3(0.0f, -0.0001f, 0.0f);
           greenPlateOn = true;
       }
       else
@@ -1141,6 +1190,7 @@ int main()
       }
 
       cubeSpaceRoomVAO.Bind();
+      goldTex.Bind();
 
       // DRAW PRESURE PLATES
       // red pressure plate
@@ -1149,12 +1199,15 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plateRed[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
+      diamondTex.Bind();
+
       // blue pressure plate
       mat4 plateBlue = mainBodyMatrix * glm::translate(glm::mat4(1.0), bluePlatePos)
           * glm::scale(glm::mat4(1.0), scale);
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &plateBlue[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
+      obsidianTex.Bind();
       // green pressure plate
       mat4 plateGreen = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenPlatePos)
           * glm::scale(glm::mat4(1.0), scale);
@@ -1162,33 +1215,48 @@ int main()
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-      tex1.Bind();
+      
+      goldTex.Bind();
 
       mat4 redBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), redCubePos)
-          * glm::scale(glm::mat4(1.0), vec3(0.5f));
+          * glm::scale(glm::mat4(1.0), vec3(0.8f));
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &redBlock[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
+   
+      diamondTex.Bind();
 
-      tex2.Bind();
-      
-      mat4 blueBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenCubePos)
-          * glm::scale(glm::mat4(1.0), vec3(0.5f));
+      mat4 blueBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), blueCubePos)
+          * glm::scale(glm::mat4(1.0), vec3(0.8f));
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &blueBlock[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
+      obsidianTex.Bind();
 
       mat4 greenBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenCubePos)
-          * glm::scale(glm::mat4(1.0), vec3(0.5f));
+          * glm::scale(glm::mat4(1.0), vec3(0.8f));
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &greenBlock[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      mat4 test1 = mainBodyMatrix * glm::translate(glm::mat4(1.0), vec3(0.0f, 5.0f, 0.0f))
-                *glm::scale(glm::mat4(1.0), vec3(5.0f));
-      //setWorldMatrix(shaderProgram, test1);
-      //glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &test1[0][0]);
-      //glDrawArrays(GL_TRIANGLES, 0, 36);
+      trophyTex.Bind();
+
+      mat4 trophieBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), trophieCubePos)
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * glm::scale(glm::mat4(1.0), vec3(1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &trophieBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
+      if ((redPlateOn == true) && (bluePlateOn == true) && (greenPlateOn = true))
+      {
+          if (trophieCubePos.y <= 0.5f)
+          {
+              trophieCubePos += (float)glfwGetTime() * vec3(0.0f, 0.0007f, 0.0f);
+          }
+      }
+
+
+
+      // SHAPE ROOM
       //-------------------------------------------------------------------------
         // draw legos
 
@@ -1218,22 +1286,24 @@ int main()
 
       if (textureState == 1)
       {
-          legoTexture.Bind();
+          legoYellowTex.Bind();
       }
 
       else if (textureState == 2)
       {
-          tex1.Bind();
+          legoBlueTex.Bind();
       }
 
       else if (textureState == 3)
       {
-          tex2.Bind();
+          legoRedTex.Bind();
+
       }
 
       else if (textureState == 4)
       {
-          tex0.Bind();
+          legoGreenTex.Bind();
+
       }
 
 
@@ -1286,8 +1356,124 @@ int main()
       }
 
    
+      // SOUND ROOM
+      // -----------------------------------------------------------
 
-      
+
+      if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) // switch sound
+      {
+          soundManager.Play(0);
+      }
+      if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) // switch sound
+      {
+          soundManager.Play(1);
+      }
+      if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) // switch sound
+      {
+          soundManager.Play(2);
+      }
+      if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) // switch sound
+      {
+          soundManager.Play(3);
+      }
+      if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) // switch sound
+      {
+          soundManager.Play(4);
+      }
+
+      concrete.Bind();
+
+      mat4 base1 = translate(mat4(1.0f), vec3(-23.5f, 0.1f, 19.f)) * glm::scale(mat4(1.0f), vec3(2.0f, 0.2f, 1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &base1[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      mat4 op1 = translate(mat4(1.0f), vec3(-23.5f, 1.0f, 19.f)) * glm::scale(mat4(1.0f), vec3(1.0f, 1.6f, 0.7f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &op1[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+      guitarTex.Bind();
+
+      mat4 st1 = translate(mat4(1.0f), vec3(-23.5f, 2.2f, 19.f)) * glm::scale(mat4(1.0f), vec3(0.6f, 0.8f, 0.2f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &st1[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      concrete.Bind();
+
+      mat4 base2 = translate(mat4(1.0f), vec3(-6.5f, 0.1f, 19.f)) * glm::scale(mat4(1.0f), vec3(2.0f, 0.2f, 1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &base2[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+      mat4 op2 = translate(mat4(1.0f), vec3(-6.5f, 1.0f, 19.f)) * glm::scale(mat4(1.0f), vec3(1.0f, 1.6f, 0.7f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &op2[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+      harpTex.Bind();
+
+      mat4 st2 = translate(mat4(1.0f), vec3(-6.5f, 2.2f, 19.f)) * glm::scale(mat4(1.0f), vec3(0.6f, 0.8f, 0.2f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &st2[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      concrete.Bind();
+
+      mat4 base3 = translate(mat4(1.0f), vec3(-6.5f, 0.1f, 2.f)) * glm::scale(mat4(1.0f), vec3(2.0f, 0.2f, 1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &base3[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+      mat4 op3 = translate(mat4(1.0f), vec3(-6.5f, 1.0f, 2.f)) * glm::scale(mat4(1.0f), vec3(1.0f, 1.6f, 0.7f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &op3[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      pianoTex.Bind();
+      mat4 st3 = translate(mat4(1.0f), vec3(-6.5f, 2.2f, 2.f)) * glm::scale(mat4(1.0f), vec3(0.6f, 0.8f, 0.2f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &st3[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      concrete.Bind();
+
+      mat4 base4 = translate(mat4(1.0f), vec3(-23.5f, 0.1f, 2.f)) * glm::scale(mat4(1.0f), vec3(2.0f, 0.2f, 1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &base4[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+      mat4 op4 = translate(mat4(1.0f), vec3(-23.5f, 1.0f, 2.f)) * glm::scale(mat4(1.0f), vec3(1.0f, 1.6f, 0.7f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &op4[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      saxTex.Bind();
+      mat4 st4 = translate(mat4(1.0f), vec3(-23.5f, 2.2f, 2.f)) * glm::scale(mat4(1.0f), vec3(0.6f, 0.8f, 0.2f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &st4[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      musicTex.Bind();
+      VAOmuseumFloor.Bind();
+      glm::mat4 roomMusicFloor = glm::mat4(1.0f);
+      glm::vec3 roomMusicFloorPos = glm::vec3(-15.0f, 0.04f, 10.0f);
+      roomMusicFloor = glm::translate(roomMusicFloor, roomMusicFloorPos) * glm::scale(glm::mat4(1.0), glm::vec3(10.0f));;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &roomMusicFloor[0][0]);
+      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+      /*diamondTex.Bind();
+
+      mat4 blueBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), blueCubePos)
+          * glm::scale(glm::mat4(1.0), vec3(0.8f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &blueBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      obsidianTex.Bind();
+
+      mat4 greenBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenCubePos)
+          * glm::scale(glm::mat4(1.0), vec3(0.8f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &greenBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      trophyTex.Bind();
+
+      mat4 trophieBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), trophieCubePos)
+          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
+          * glm::scale(glm::mat4(1.0), vec3(1.0f));
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &trophieBlock[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+      */
       
 
 

@@ -51,6 +51,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -97,6 +100,12 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\pop_cat.png">
@@ -129,13 +138,58 @@
     <Image Include="stone.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
-    <Image Include="legoBlue.jpg">
-      <Filter>Resources\Textures</Filter>
-    </Image>
     <Image Include="legoYellow.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
     <Image Include="concrete.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="gold.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="diamond.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="obsidian.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="dirt.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="grass.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="trophy.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="sky.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="legoBlueTex.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="legoRed.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="legoGreen.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="stoneArt.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="guitar.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="harp.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="piano.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="sax.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="music.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>
