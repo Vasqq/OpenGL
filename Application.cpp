@@ -27,8 +27,8 @@
 
 using namespace glm;
 
-const unsigned int width = 1440;
-const unsigned int height = 900;
+const unsigned int width = 2048;
+const unsigned int height = 1080;
 
 using namespace std;
 
@@ -75,8 +75,6 @@ void drawMuseum(Shader shaderProgram, GLuint colorLoc, GLuint worldMatrixLoc, Te
     glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &floor[0][0]);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
-    // Draw axis
 
 
 }
@@ -799,6 +797,8 @@ int main()
     Texture skyTex("sky.jpg", GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE);
     skyTex.texUnit(shaderProgram, "tex4", 0);
     
+    Texture containerTex("container.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+    containerTex.texUnit(shaderProgram, "tex0", 0);
     Texture planksTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
     planksTex.texUnit(shaderProgram, "tex0", 0);
     Texture planksSpec("planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
@@ -1028,6 +1028,28 @@ int main()
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
       wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[13])
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      containerTex.Bind();
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[11] + vec3(0.02f,0.0f,0.0f))
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[10] + vec3(-0.02f, 0.0f, 0.0f))
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[8] + vec3(-0.02f, 0.0f, 0.0f))
+          * wallScaleInterior;
+      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+
+  wall = mainBodyMatrix * glm::translate(glm::mat4(1.0), wallPos[13] + vec3(0.02f, 0.0f, 0.0f))
           * wallScaleInterior;
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &wall[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -1382,19 +1404,19 @@ int main()
       // -----------------------------------------------------------
 
 
-      if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) // switch sound
+      if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) // switch sound
       {
           soundManager.Play(0);
       }
-      if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) // switch sound
+      if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS) // switch sound
       {
           soundManager.Play(1);
       }
-      if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) // switch sound
+      if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) // switch sound
       {
           soundManager.Play(2);
       }
-      if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) // switch sound
+      if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) // switch sound
       {
           soundManager.Play(3);
       }

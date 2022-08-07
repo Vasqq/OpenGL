@@ -177,19 +177,22 @@
     <Image Include="stoneArt.png">
       <Filter>Resources\Textures</Filter>
     </Image>
-    <Image Include="guitar.jpg">
+    <Image Include="music.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
-    <Image Include="harp.jpg">
-      <Filter>Resources\Textures</Filter>
-    </Image>
-    <Image Include="piano.jpg">
+    <Image Include="container.png">
       <Filter>Resources\Textures</Filter>
     </Image>
     <Image Include="sax.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
-    <Image Include="music.jpg">
+    <Image Include="piano.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="guitar.jpg">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="harp.jpg">
       <Filter>Resources\Textures</Filter>
     </Image>
   </ItemGroup>

@@ -200,6 +200,7 @@
     <Image Include="..\..\..\..\Downloads\snow.jpg" />
     <Image Include="brick.jpg" />
     <Image Include="concrete.jpg" />
+    <Image Include="container.png" />
     <Image Include="diamond.png" />
     <Image Include="dirt.jpg" />
     <Image Include="gold.png" />
