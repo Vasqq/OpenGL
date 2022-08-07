@@ -1398,10 +1398,10 @@ int main()
       {
           soundManager.Play(3);
       }
-      if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) // switch sound
-      {
-          soundManager.Play(4);
-      }
+      //if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) // switch sound
+      //{
+      //    soundManager.Play(4);
+      //}
 
       concrete.Bind();
 
@@ -1484,7 +1484,8 @@ int main()
       glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
     
-          if (camera.Position.x >= lightPos.x + -2.0f && camera.Position.x <= lightPos.x + 2.0f) {
+          if ( (camera.Position.x >= lightPos.x + -2.0f && camera.Position.x <= lightPos.x + 2.0f) && (camera.Position.z >= lightPos.z + -2.0f && camera.Position.z <= lightPos.z + 2.0f))
+          {
 
 
               vec4 lightColor2 = vec4(static_cast<float>(sin(glfwGetTime() * 2.0)), static_cast<float>(sin(glfwGetTime() * 0.7)), static_cast<float>(sin(glfwGetTime() * 1.3)), 1.0f);

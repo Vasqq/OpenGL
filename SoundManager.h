@@ -14,7 +14,7 @@ static const char* sound_names[] = {
   "C:/Users/Liam/Desktop/Source/harp.wav",
   "C:/Users/Liam/Desktop/Source/piano.wav",
   "C:/Users/Liam/Desktop/Source/sax.wav",
-  "C:/Users/Liam/Desktop/Source/trumpet.wav",
+  //"C:/Users/Liam/Desktop/Source/trumpet.wav",
 };
 class SoundManager
 {
