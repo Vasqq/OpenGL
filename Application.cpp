@@ -619,6 +619,9 @@ int main()
     vec3 roomOrigin = vec3(-18.5f, 0.5f, -10.5f);
     vec3 renderColor = vec3(0.0f, 0.0f, 0.0f);
 
+    mat4 rotationMat = mat4(1.0f);
+    mat4 lightBox = mat4(1.0f);
+
 
 	// Initialize GLFW
 	glfwInit();
@@ -763,10 +766,21 @@ int main()
 
 
 
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.0f, 30.0f, 0.0f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPos)  * glm::scale(glm::mat4(1.0), glm::vec3(10.0f));
+    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    glm::vec3 lightPos = glm::vec3(15.0f, 1.0f, 10.0f);
+    glm::vec3 lightPos2 = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 lightPos3 = glm::vec3(5.0f, 0.0f, 0.0f); // red cube
+    glm::vec3 lightPos4 = glm::vec3(-5.0f, 0.0f, 0.0f); // green cube
+    glm::vec3 lightPos5 = glm::vec3(0.0f, 0.0f, 5.0f); // blue cube
+
+
+
+    glm::mat4 lightModel = glm::mat4(1.0f);
+    lightModel = translate(lightModel, lightPos) * rotationMat;
+    //lightModel = glm::translate(lightModel, lightPos) * glm::scale(glm::mat4(1.0), glm::vec3(10.0f));
+
+    //mat4 lightModel2 = lightModel * translate(mat4(1.0f), lightPos2) * rotationMat* glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+
 
 
     // Setup lighting for shaders
@@ -842,6 +856,8 @@ int main()
 
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 2.0f));
+    //float rotationVal = 0.0f;
+    double previousTime = glfwGetTime();
 
 	// Main while loope
 	while (!glfwWindowShouldClose(window))
@@ -850,6 +866,12 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        double crntTime = glfwGetTime();
+        if (crntTime - previousTime >= 1 / 60) {
+            rotationMat *= rotate(glm::mat4(1.0f), glm::radians(0.01f), glm::vec3(0.0, 1.0, 0.0));
+            previousTime = crntTime;
+        }
 
 		// Handles camera inputs
 		camera.Inputs(window);
@@ -1444,7 +1466,7 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &st4[0][0]);
       glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      musicTex.Bind();
+     musicTex.Bind();
       VAOmuseumFloor.Bind();
       glm::mat4 roomMusicFloor = glm::mat4(1.0f);
       glm::vec3 roomMusicFloorPos = glm::vec3(-15.0f, 0.04f, 10.0f);
@@ -1452,43 +1474,105 @@ int main()
       glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &roomMusicFloor[0][0]);
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-      /*diamondTex.Bind();
+      // Tells OpenGL which Shader Program we want to use
+      lightShader.Activate();
+      // Export the camMatrix to the Vertex Shader of the light cube
+      camera.Matrix(lightShader, "camMatrix");
+      // Bind the VAO so OpenGL knows to use it
+      lightVAO.Bind();   
 
-      mat4 blueBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), blueCubePos)
-          * glm::scale(glm::mat4(1.0), vec3(0.8f));
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &blueBlock[0][0]);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
+      glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
-      obsidianTex.Bind();
+    
+          if (camera.Position.x >= lightPos.x + -2.0f && camera.Position.x <= lightPos.x + 2.0f) {
 
-      mat4 greenBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), greenCubePos)
-          * glm::scale(glm::mat4(1.0), vec3(0.8f));
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &greenBlock[0][0]);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
 
-      trophyTex.Bind();
+              vec4 lightColor2 = vec4(static_cast<float>(sin(glfwGetTime() * 2.0)), static_cast<float>(sin(glfwGetTime() * 0.7)), static_cast<float>(sin(glfwGetTime() * 1.3)), 1.0f);
+              lightBox = lightModel * translate(mat4(1.0f), lightPos)
+                  * glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+              lightShader.Activate();
+              glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, value_ptr(lightBox));
+              glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor2.x, lightColor2.y, lightColor2.z, lightColor2.w);
+              shaderProgram.Activate();
+              glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &lightBox[0][0]);
+              glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor2.x, lightColor2.y, lightColor2.z, lightColor2.w);
+              glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+              glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
-      mat4 trophieBlock = mainBodyMatrix * glm::translate(glm::mat4(1.0), trophieCubePos)
-          * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0))
-          * glm::scale(glm::mat4(1.0), vec3(1.0f));
-      glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &trophieBlock[0][0]);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
-      */
+              
+
+              if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+              {
+
+                  vec4 lightColor3 = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+                  lightBox = lightModel * translate(mat4(1.0f), lightPos3)
+                      * glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+                  lightShader.Activate();
+                  glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, value_ptr(lightBox));
+                  glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor3.x, lightColor3.y, lightColor3.z, lightColor3.w);
+                  shaderProgram.Activate();
+                  glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor3.x, lightColor3.y, lightColor3.z, lightColor3.w);
+                  glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos3.x, lightPos3.y, lightPos3.z);
+                  glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+              {
+                  vec4 lightColor4 = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+                  lightBox = lightModel * translate(mat4(1.0f), lightPos4)
+                      * glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+                  lightShader.Activate();
+                  glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, value_ptr(lightBox));
+                  glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor4.x, lightColor4.y, lightColor4.z, lightColor4.w);
+                  shaderProgram.Activate();
+                  glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor4.x, lightColor4.y, lightColor4.z, lightColor4.w);
+                  glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos4.x, lightPos4.y, lightPos4.z);
+                  glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+              }
+
+              if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+              {
+
+                  vec4 lightColor5 = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+                  lightBox = lightModel * translate(mat4(1.0f), lightPos5)
+                      * glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+                  lightShader.Activate();
+                  glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, value_ptr(lightBox));
+                  glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor5.x, lightColor5.y, lightColor5.z, lightColor5.w);
+                  shaderProgram.Activate();
+                  glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor5.x, lightColor5.y, lightColor5.z, lightColor5.w);
+                  glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos5.x, lightPos5.y, lightPos5.z);
+                  glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+              }
+
+              
+
+
+          }
+
+          else {
+
+              vec4 lightColor6 = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+              lightBox = translate(mat4(1.0f), lightPos)
+                  * glm::scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f));
+              lightShader.Activate();
+              glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, value_ptr(lightBox));
+              glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor6.x, lightColor6.y, lightColor6.z, lightColor6.w);
+              shaderProgram.Activate();
+              glUniformMatrix4fv(worldMatrixLoc, 1, GL_FALSE, &lightBox[0][0]);
+              glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor6.x, lightColor6.y, lightColor6.z, lightColor6.w);
+              glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+              glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+          }
+
+
+          /*glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
+          glm::vec3 lightPos2 = glm::vec3(10.0f, 5.0f, 15.0f);
+          glm::vec3 lightPos3 = glm::vec3(2.0f, 1.0f, 3.0f)*/;
       
-
-
-		// Tells OpenGL which Shader Program we want to use
-		lightShader.Activate();
-		// Export the camMatrix to the Vertex Shader of the light cube
-		camera.Matrix(lightShader, "camMatrix");
-		// Bind the VAO so OpenGL knows to use it
-		lightVAO.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
